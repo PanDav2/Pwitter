@@ -11,7 +11,7 @@ Pwitter is a kind of "Simpler" Twitter developped with JavaEE and TomcatServer u
  - [Copyright and license](#copyright-and-license)
 
 ## Quick start
-.
+
 - Clone the repo: `git clone https://github.com/tamazy/pwitter.git`. in your src folder.
 
 ### What's included
@@ -48,15 +48,15 @@ pwitter/
 
 ## Authors
 
-**Mark Otto**
+**Remi Cadene**
 
-- <http://twitter.com/mdo>
-- <http://github.com/mdo>
+- <http://remicadene.com/HTML>
+- <http://github.com/Tamazy>
 
-**Jacob Thornton**
+**David Panou**
 
-- <http://twitter.com/fat>
-- <http://github.com/fat>
+- <http://twitter.com/>
+- <http://github.com/>
 
 
 
