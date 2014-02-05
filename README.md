@@ -12,7 +12,7 @@ Pwitter is a kind of "Simpler" Twitter developped with JavaEE and TomcatServer u
 
 ## Quick start
 
-- Clone the repo: `git clone https://github.com/tamazy/pwitter.git`. in your src folder.
+- Clone the repo: `git clone https://github.com/tamazy/pwitter.git`. in your root folder.
 
 ### What's included
 
