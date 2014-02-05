@@ -1,6 +1,6 @@
 # [Pwitter](http://getbootstrap.com)
 
-Pwitter is a kind of "Simpler" Twitter developped with JavaEE and TomcatServer using Mysql and MongoDB during the LI328 lectures at UPMC, created by [Rémi Cadène](http://twitter.com/) and [David Panou](http://twitter.com/).
+Pwitter is a kind of "Simpler" Twitter developped with JavaEE and TomcatServer using Mysql and MongoDB during the LI328 lectures at UPMC by [Ludovic Denoyer](http://www-connex.lip6.fr/~denoyer/wikihomepage/pmwiki.php), created by [Rémi Cadène](http://remicadene.com/HTML) and [David Panou](http://twitter.com/).
 
 ## Table of contents
 
