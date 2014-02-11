@@ -10,6 +10,8 @@ import org.json.JSONException;
 
 public class CreateUser extends HttpServlet{
 	
+	//http://localhost:8080/CADENE_PANOU/user/create?username="Tamazy"&password="azerty"&firstName="Remi"&lastName="Cadene"&email="remicadene@laposte.net"
+	
 	@Override
 	protected void doGet (HttpServletRequest req, HttpServletResponse resp) throws IOException{
 		
@@ -31,11 +33,11 @@ public class CreateUser extends HttpServlet{
 				resp.getWriter().println(services.User.create(firstName, lastName, username, email, password).toString());
 			} catch (JSONException e) {
 				//e.printStackTrace();
-				resp.getWriter().println("{\"status\":\"error\",\"error_code\":\"0\",\"error_msg\":\"JSONError.\"}");
+				resp.getWriter().println(ServletTools.JSONError());
 			}
 			
 		} else {
-				resp.getWriter().println("{\"status\":\"error\",\"error_code\":\"1\",\"error_msg\":\"Au moins un argument nein valide.\"}");
+				resp.getWriter().println(ServletTools.ArgError());
 		}
 	
 	}

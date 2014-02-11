@@ -10,8 +10,7 @@ import org.json.JSONException;
 
 public class Logout extends HttpServlet{
 	
-	@Override
-	protected void doGet (HttpServletRequest req, HttpServletResponse resp) throws IOException{
+	/*protected void doGet (HttpServletRequest req, HttpServletResponse resp) throws IOException{
 		
 		resp.setContentType("plain/text");
 		
@@ -30,7 +29,7 @@ public class Logout extends HttpServlet{
 				resp.getWriter().println("{\"status\":\"error\",\"error_code\":\"1\",\"error_msg\":\"Au moins un argument nein valide.\"}");
 		}
 	
-	}
+	}*/
 	
 
 }
