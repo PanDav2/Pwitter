@@ -1,25 +1,37 @@
 package core;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
-import org.json.JSONException;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.sql.DataSource;
 
-import services.ServicesTools;
-import tools.DBStatic;
+import tools.DBMySQL;
 
 public class User extends AppModel {
 	
-	static public void create(
+	static public int create(
 			String firstName, String lastName,
 			String username, String email, String password) throws CoreException
 	{
 		try {
-			DBStatic.getMySQLConnection();
+		    Class.forName("com.mysql.jdbc.Driver").newInstance();
+		    Connection connection = DBMySQL.getMySQLConnection();
+			Statement statement = connection.createStatement();
+			int statut = statement.executeUpdate("INSERT INTO Cadene_Panou.User (username) VALUES ('test');");
+			return statut;
+		} catch (ClassNotFoundException e) {
+		    throw new RuntimeException("Cannot find the driver in the classpath!", e);
+		} catch (InstantiationException e) {
+			throw new CoreException(e.getMessage(),12);
+		} catch (IllegalAccessException e) {
+			throw new CoreException(e.getMessage(),11);
+		} catch (SQLException e) {
+			throw new CoreException(e.getMessage(),10);
 		}
-		catch(SQLException e){
-			
-		}
-		
 	}
 
 	/*public static void login(String username, String password) throws CoreException {

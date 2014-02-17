@@ -16,6 +16,8 @@ public class CoreException extends Exception {
 					break;
 			case 1: msg = "test";
 					break;
+			case 10: msg = "Database PB";
+					break;
 			default: msg = "default";
 					 break;
 		}

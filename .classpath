@@ -8,5 +8,9 @@
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
+	<classpathentry kind="lib" path="/users/Etu3/3000693/mysql-connector-java-5.1.18-bin.jar"/>
+	<classpathentry kind="lib" path="/users/nfs/Etu3/3000693/json-org.jar"/>
+	<classpathentry kind="lib" path="/users/nfs/Etu3/3000693/mongo-2.7.3.jar"/>
+	<classpathentry kind="lib" path="/users/Etu3/3000693/Licence/Semestre6/LI328/CADENE_PANOU/WebContent/WEB-INF/lib/servlet-api.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
