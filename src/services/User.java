@@ -20,10 +20,10 @@ public class User {
 			json.put("statut", "ok");
 			jsonUser.put("id", id);
 			jsonUser.put("firstName", firstName);
-			jsonUser.put("lastName", firstName);
-			jsonUser.put("username", firstName);
-			jsonUser.put("email", firstName);
-			jsonUser.put("password", firstName);
+			jsonUser.put("lastName", lastName);
+			jsonUser.put("username", username);
+			jsonUser.put("email", email);
+			jsonUser.put("password", password);
 			json.put("user", jsonUser);
 			return json;
 		}
@@ -33,13 +33,18 @@ public class User {
 		}
 	}
 
-	/*
 	static public JSONObject login(String username, String password) throws JSONException {
 		try
 		{
-			core.User.login( username, password);
-			return ServicesTools.ok();
-			//return core.JsonFactory.getJson();
+			String sessionKey = core.User.login(username, password);
+			JSONObject json = new JSONObject();
+			JSONObject jsonUser = new JSONObject();
+			json.put("statut", "ok");
+			jsonUser.put("username", username);
+			jsonUser.put("password", password);
+			jsonUser.put("sessionKey", sessionKey);
+			json.put("user", jsonUser);
+			return json;
 		}
 		catch(CoreException e)
 		{
@@ -47,20 +52,22 @@ public class User {
 		}
 		
 	}
-	static public JSONObject logout(String key) throws JSONException {
+	
+	static public JSONObject logout(String sessionKey) throws JSONException {
 		try
 		{
-			core.User.logout( key );
-			return tools.Json.ok();
-			//return core.JsonFactory.getJson();
+			core.User.logout(sessionKey);
+			JSONObject json = new JSONObject();
+			json.put("statut", "ok");
+			return json;
 		}
 		catch(CoreException e)
 		{
-			return(tools.Json.error(101,"BD problem"));
+			return(ServicesTools.error(e));
 		}
 		
 	}
-	*/
+	
 	
 	
 	

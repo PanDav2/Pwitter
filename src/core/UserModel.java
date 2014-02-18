@@ -1,6 +1,6 @@
 package core;
 
-public class UserModel {
+public class UserModel extends AppModel {
 
 
 

@@ -1,5 +1,7 @@
 package core;
 
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -9,8 +11,10 @@ import java.sql.PreparedStatement;
 import javax.sql.DataSource;
 
 import tools.DBMySQL;
+import tools.Sha1;
+import tools.Time;
 
-public class User extends AppModel {
+public class User {
 	
 	static public int create(
 			String firstName, String lastName,
@@ -25,8 +29,8 @@ public class User extends AppModel {
 
 		    Class.forName("com.mysql.jdbc.Driver").newInstance();
 		    Connection con = DBMySQL.getMySQLConnection();
-		    String sql = "INSERT INTO Cadene_Panou.Users"
-		    		   + "(firstName,lastName,username,email,password,created)"
+		    String sql = "INSERT INTO Cadene_Panou.Users "
+		    		   + "(firstName,lastName,username,email,password,created) "
 		    		   + "VALUES (?,?,?,?,?,?);";
 			PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 			ps.setString(1,firstName);
@@ -34,11 +38,16 @@ public class User extends AppModel {
 			ps.setString(3,username);
 			ps.setString(4,email);
 			ps.setString(5,password);
-			ps.setTimestamp(6, getCurrentTimeStamp());
+			ps.setInt(6,Time.getCurrentTime());
 			ps.executeUpdate();
 			ResultSet rset = ps.getGeneratedKeys();
-			rset.next()
-			return rset.getInt(1);
+			rset.next();
+			int id = rset.getInt(1);
+			
+			ps.close();
+			con.close();
+			
+			return id;
 
 		} catch (ClassNotFoundException e) {
 		    throw new RuntimeException("Cannot find the driver in the classpath!", e);
@@ -48,17 +57,10 @@ public class User extends AppModel {
 			throw new CoreException(e.getMessage(),11);
 		} catch (SQLException e) {
 			throw new CoreException(e.getMessage(),10);
-		} finally {
- 			if (ps != null) {
-				ps.close();
-			}
-	 		if (con != null) {
-				con.close();
-			}
 		}
 	}
 
-	public static int login(String username, String password) throws CoreException
+	public static String login(String username, String password) throws CoreException
 	{
 		if ((username == null) || (password == null)) {
 			throw new CoreException(0);
@@ -68,24 +70,33 @@ public class User extends AppModel {
 
  			Class.forName("com.mysql.jdbc.Driver").newInstance();
 		    Connection con = DBMySQL.getMySQLConnection();
-		    String sql = "SELECT id, username, password"
-		    		   + "FROM Cadene_Panou.Users"
+		    
+		    String sql = "SELECT id, username, password "
+		    		   + "FROM Cadene_Panou.Users "
 		    		   + "WHERE username = ?;";
 			PreparedStatement ps = con.prepareStatement(sql);
 			ps.setString(1,username);
-			ResultSet rset = ps.execute();
+			ResultSet rset = ps.executeQuery();
 			rset.next();
-			if(rset.getString(2) != username){
-				throw new CoreException(1);
-			}
-			if(rset.getString(3) != password){
+			if(!rset.getString(3).equals(password)){
 				throw new CoreException(2);
 			}
 			int id = rset.getInt(1);
 			
-			//Insère une nouvelle session dans la base de données
-		    //String key=AuthentificationTools.insertSession(id_user,false);
-		    return id;
+			String sessionKey = Sha1.generate(
+				id + username + password + Time.getCurrentTime()
+			);
+			
+			sql = "UPDATE Cadene_Panou.Users "
+					+ "SET sessionKey=?, lastLogin=? "
+		    		+ "WHERE id=?;";
+			ps = con.prepareStatement(sql);
+			ps.setString(1,sessionKey);
+			ps.setInt(2,Time.getCurrentTime());
+			ps.setInt(3,id);
+			ps.executeUpdate();
+			
+		    return sessionKey;
 
 		} catch (ClassNotFoundException e) {
 		    throw new RuntimeException("Cannot find the driver in the classpath!", e);
@@ -95,22 +106,43 @@ public class User extends AppModel {
 			throw new CoreException(e.getMessage(),11);
 		} catch (SQLException e) {
 			throw new CoreException(e.getMessage(),10);
-		} finally {
- 			if (ps != null) {
-				ps.close();
-			}
-	 		if (con != null) {
-				con.close();
-			}
+		} catch (NoSuchAlgorithmException e) {
+			throw new CoreException(e.getMessage(),13);
+		} catch (UnsupportedEncodingException e) {
+			throw new CoreException(e.getMessage(),14);
 		}
 
-		
+	
 	}
 
-	public static void logout(String key) throws CoreException {
-		// TODO Auto-generated method stub
+	public static void logout(String sessionKey) throws CoreException {
+		
+		if (sessionKey == null) {
+			throw new CoreException(0);
+		}
+		
+		try {
+
+ 			Class.forName("com.mysql.jdbc.Driver").newInstance();
+		    Connection con = DBMySQL.getMySQLConnection();
+		    
+		    String sql = "UPDATE Cadene_Panou.Users "
+					+ "SET lastLogin=0 "
+		    		+ "WHERE sessionKey=?;";
+			PreparedStatement ps = con.prepareStatement(sql);
+			ps.setString(1,sessionKey);
+			ps.executeUpdate();
+
+		} catch (ClassNotFoundException e) {
+		    throw new RuntimeException("Cannot find the driver in the classpath!", e);
+		} catch (InstantiationException e) {
+			throw new CoreException(e.getMessage(),12);
+		} catch (IllegalAccessException e) {
+			throw new CoreException(e.getMessage(),11);
+		} catch (SQLException e) {
+			throw new CoreException(e.getMessage(),10);
+		}
 		
 	}
-	
 	
 }

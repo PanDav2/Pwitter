@@ -10,26 +10,27 @@ import org.json.JSONException;
 
 public class Logout extends HttpServlet{
 	
-	/*protected void doGet (HttpServletRequest req, HttpServletResponse resp) throws IOException{
+	//http://li328.lip6.fr:8280/CADENE_PANOU/users/logout?sessionKey=
+	
+	protected void doGet (HttpServletRequest req, HttpServletResponse resp) throws IOException{
 		
 		resp.setContentType("plain/text");
 		
-		if(req.getParameterMap().containsKey("key")) {
+		if(req.getParameterMap().containsKey("sessionKey")) {
 		
-			String key =  req.getParameter("key");
+			String sessionKey =  req.getParameter("sessionKey");
 		
 			try {
-				resp.getWriter().println(services.User.logout(key).toString());
+				resp.getWriter().println(services.User.logout(sessionKey).toString());
 			} catch (JSONException e) {
-				//e.printStackTrace();
-				resp.getWriter().println("{\"status\":\"error\",\"error_code\":\"0\",\"error_msg\":\"JSONError.\"}");
+				resp.getWriter().println(ServletTools.JSONError());
 			}
 			
 		} else {
-				resp.getWriter().println("{\"status\":\"error\",\"error_code\":\"1\",\"error_msg\":\"Au moins un argument nein valide.\"}");
+				resp.getWriter().println(ServletTools.ArgError());
 		}
 	
-	}*/
+	}
 	
 
 }

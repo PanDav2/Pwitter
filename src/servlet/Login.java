@@ -10,7 +10,8 @@ import org.json.JSONException;
 
 public class Login extends HttpServlet{
 	
-	/*@Override
+	//http://li328.lip6.fr:8280/CADENE_PANOU/users/login?username=Tamazy&password=azerty
+	
 	protected void doGet (HttpServletRequest req, HttpServletResponse resp) throws IOException{
 		
 		resp.setContentType("plain/text");
@@ -24,15 +25,14 @@ public class Login extends HttpServlet{
 			try {
 				resp.getWriter().println(services.User.login(username, password).toString());
 			} catch (JSONException e) {
-				//e.printStackTrace();
-				resp.getWriter().println("{\"status\":\"error\",\"error_code\":\"0\",\"error_msg\":\"JSONError.\"}");
+				resp.getWriter().println(ServletTools.JSONError());
 			}
 			
 		} else {
-				resp.getWriter().println("{\"status\":\"error\",\"error_code\":\"1\",\"error_msg\":\"Au moins un argument nein valide.\"}");
+				resp.getWriter().println(ServletTools.ArgError());
 		}
 	
-	}*/
+	}
 	
 
 }
