@@ -32,14 +32,14 @@ CREATE  TABLE IF NOT EXISTS `Cadene_Panou`.`Users` (
   `created` MEDIUMINT NOT NULL ,
   `lastUpdate` MEDIUMINT NOT NULL ,
   `lastModify` MEDIUMINT NOT NULL ,
-  `image_id` INT NOT NULL ,
+  `image_id` INT NULL ,
   `sessionKey` VARCHAR(255) NOT NULL ,
   `sesssionTime` MEDIUMINT NOT NULL ,
   PRIMARY KEY (`id`) ,
   UNIQUE INDEX `username_UNIQUE` (`username` ASC) ,
-  INDEX `fk_Users_table1_idx` (`image_id` ASC) ,
   UNIQUE INDEX `email_UNIQUE` (`email` ASC) ,
-  CONSTRAINT `fk_Users_table1`
+  INDEX `FK_profil_image_idx` (`image_id` ASC) ,
+  CONSTRAINT `FK_profil_image`
     FOREIGN KEY (`image_id` )
     REFERENCES `Cadene_Panou`.`Images` (`id` )
     ON DELETE NO ACTION
@@ -109,9 +109,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `Cadene_Panou`.`Hashtages_Pwitts`
+-- Table `Cadene_Panou`.`Hashtags_Pwitts`
 -- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `Cadene_Panou`.`Hashtages_Pwitts` (
+CREATE  TABLE IF NOT EXISTS `Cadene_Panou`.`Hashtags_Pwitts` (
   `id` INT NOT NULL AUTO_INCREMENT ,
   `hashtag_id` INT NOT NULL ,
   `pwitt_id` INT NOT NULL ,
