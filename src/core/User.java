@@ -4,9 +4,8 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.PreparedStatement;
 
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import javax.sql.DataSource;
 
 import tools.DBMySQL;
@@ -17,12 +16,30 @@ public class User extends AppModel {
 			String firstName, String lastName,
 			String username, String email, String password) throws CoreException
 	{
+		if ((firstName == null) || (lastName == null)
+			||(username == null) || (email == null) || (password == null)) {
+			throw new CoreException(0);
+		}
+
 		try {
+
 		    Class.forName("com.mysql.jdbc.Driver").newInstance();
-		    Connection connection = DBMySQL.getMySQLConnection();
-			Statement statement = connection.createStatement();
-			int statut = statement.executeUpdate("INSERT INTO Cadene_Panou.User (username) VALUES ('test');");
-			return statut;
+		    Connection con = DBMySQL.getMySQLConnection();
+		    String sql = "INSERT INTO Cadene_Panou.Users"
+		    		   + "(firstName,lastName,username,email,password,created)"
+		    		   + "VALUES (?,?,?,?,?,?);";
+			PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+			ps.setString(1,firstName);
+			ps.setString(2,lastName);
+			ps.setString(3,username);
+			ps.setString(4,email);
+			ps.setString(5,password);
+			ps.setTimestamp(6, getCurrentTimeStamp());
+			ps.executeUpdate();
+			ResultSet rset = ps.getGeneratedKeys();
+			rset.next()
+			return rset.getInt(1);
+
 		} catch (ClassNotFoundException e) {
 		    throw new RuntimeException("Cannot find the driver in the classpath!", e);
 		} catch (InstantiationException e) {
@@ -31,42 +48,64 @@ public class User extends AppModel {
 			throw new CoreException(e.getMessage(),11);
 		} catch (SQLException e) {
 			throw new CoreException(e.getMessage(),10);
+		} finally {
+ 			if (ps != null) {
+				ps.close();
+			}
+	 		if (con != null) {
+				con.close();
+			}
 		}
 	}
 
-	/*public static void login(String username, String password) throws CoreException {
+	public static int login(String username, String password) throws CoreException
+	{
 		if ((username == null) || (password == null)) {
 			throw new CoreException(0);
 		}
-		try
-		{
-			boolean isUser = UserModel.userExists(username);
-			if (!isUser) throw new CoreException(1);
 		
-			boolean passwordOk = UserModel.checkPassword()          ;
-		      if (!passwordOk) return(ServicesTools.error("Bad password "+login,2));
-		      //Récupère l’id de l’utilisateur
-		      int id_user=AuthentificationTools.getIdUser(login);
-		      JSONObject retour=new JSONObject();
-		      //Insère une nouvelle session dans la base de données
-		      String key=AuthentificationTools.insertSession(id_user,false);
-		      retour.put("key",key);
-		      return(retour);
-		}
-		catch(JSONException e)
-		{
-		      return(ServicesTools.error("JSON Problem "+e.getMessage(),100));
-		}
-		catch (CoreException e)
-		{
-		      return(ServicesTools.error("Problem while generating session key",1000)
-		          );
-		} catch (Exception e) {
-		      return(ServicesTools.error("Problem...",10000));
+		try {
+
+ 			Class.forName("com.mysql.jdbc.Driver").newInstance();
+		    Connection con = DBMySQL.getMySQLConnection();
+		    String sql = "SELECT id, username, password"
+		    		   + "FROM Cadene_Panou.Users"
+		    		   + "WHERE username = ?;";
+			PreparedStatement ps = con.prepareStatement(sql);
+			ps.setString(1,username);
+			ResultSet rset = ps.execute();
+			rset.next();
+			if(rset.getString(2) != username){
+				throw new CoreException(1);
+			}
+			if(rset.getString(3) != password){
+				throw new CoreException(2);
+			}
+			int id = rset.getInt(1);
+			
+			//Insère une nouvelle session dans la base de données
+		    //String key=AuthentificationTools.insertSession(id_user,false);
+		    return id;
+
+		} catch (ClassNotFoundException e) {
+		    throw new RuntimeException("Cannot find the driver in the classpath!", e);
+		} catch (InstantiationException e) {
+			throw new CoreException(e.getMessage(),12);
+		} catch (IllegalAccessException e) {
+			throw new CoreException(e.getMessage(),11);
+		} catch (SQLException e) {
+			throw new CoreException(e.getMessage(),10);
+		} finally {
+ 			if (ps != null) {
+				ps.close();
+			}
+	 		if (con != null) {
+				con.close();
+			}
 		}
 
 		
-	}*/
+	}
 
 	public static void logout(String key) throws CoreException {
 		// TODO Auto-generated method stub
