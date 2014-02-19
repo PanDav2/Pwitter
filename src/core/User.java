@@ -10,25 +10,20 @@ import java.sql.PreparedStatement;
 
 import javax.sql.DataSource;
 
-import tools.DBMySQL;
+import tools.MySQLDB;
 import tools.Sha1;
 import tools.Time;
 
-public class User {
+public class User extends UserModel {
 	
 	static public int create(
 			String firstName, String lastName,
 			String username, String email, String password) throws CoreException
 	{
-		if ((firstName == null) || (lastName == null)
-			||(username == null) || (email == null) || (password == null)) {
-			throw new CoreException(0);
-		}
 
 		try {
 
-		    Class.forName("com.mysql.jdbc.Driver").newInstance();
-		    Connection con = DBMySQL.getMySQLConnection();
+		    Connection con = MySQLDB.getConnection();
 		    String sql = "INSERT INTO Cadene_Panou.Users "
 		    		   + "(firstName,lastName,username,email,password,created) "
 		    		   + "VALUES (?,?,?,?,?,?);";
@@ -62,14 +57,11 @@ public class User {
 
 	public static String login(String username, String password) throws CoreException
 	{
-		if ((username == null) || (password == null)) {
-			throw new CoreException(0);
-		}
 		
 		try {
 
  			Class.forName("com.mysql.jdbc.Driver").newInstance();
-		    Connection con = DBMySQL.getMySQLConnection();
+		    Connection con = MySQLDB.getConnection();
 		    
 		    String sql = "SELECT id, username, password "
 		    		   + "FROM Cadene_Panou.Users "
@@ -115,16 +107,13 @@ public class User {
 	
 	}
 
-	public static void logout(String sessionKey) throws CoreException {
-		
-		if (sessionKey == null) {
-			throw new CoreException(0);
-		}
+	public static void logout(String sessionKey) throws CoreException
+	{
 		
 		try {
 
  			Class.forName("com.mysql.jdbc.Driver").newInstance();
-		    Connection con = DBMySQL.getMySQLConnection();
+		    Connection con = MySQLDB.getConnection();
 		    
 		    String sql = "UPDATE Cadene_Panou.Users "
 					+ "SET lastLogin=0 "

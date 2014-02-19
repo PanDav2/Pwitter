@@ -3,7 +3,7 @@
     <Resource
         name="jdbc/db" type="javax.sql.DataSource"
         maxActive="100" maxIdle="30" maxWait="10000"
-        url="jdbc:mysql://localhost:33306/Cadene_Panou"
+        url="jdbc:mysql://132.227.201.129:33306/Cadene_Panou"
         driverClassName="com.mysql.jdbc.Driver"
         username="Cadene_Panou" password="Cadene_Panou"
         factory="org.apache.commons.dbcp.BasicDataSourceFactory" 

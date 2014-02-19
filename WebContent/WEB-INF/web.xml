@@ -54,6 +54,15 @@
         <servlet-name>AddFollower</servlet-name>
         <url-pattern>/followers/remove</url-pattern>
     </servlet-mapping>
+   
+    <servlet>
+        <servlet-name>TestMongo</servlet-name>
+        <servlet-class>servlet.TestMongo</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>TestMongo</servlet-name>
+        <url-pattern>/test/mongo</url-pattern>
+    </servlet-mapping>
     
     
  </web-app>

@@ -8,7 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import tools.DBMySQL;
+import tools.MySQLDB;
 import tools.Sha1;
 import tools.Time;
 
@@ -17,9 +17,7 @@ public class AppModel {
 	public static int isAuthentified(String sessionKey) throws CoreException{
 		
 		try {
-
- 			Class.forName("com.mysql.jdbc.Driver").newInstance();
-		    Connection con = DBMySQL.getMySQLConnection();
+		    Connection con = MySQLDB.getConnection();
 		    
 		    String sql = "SELECT id, lastLogin"
 		    		   + "FROM Cadene_Panou.Users "
