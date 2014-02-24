@@ -20,5 +20,19 @@ public class Pwitt {
 			return(ServicesTools.error(e));
 		}
 	}
+	
+	static public JSONObject search(String sessionKey) throws JSONException{
+		try
+		{
+			core.Pwitt.search(sessionKey);
+			JSONObject json = new JSONObject();
+			json.put("statut", "ok");
+			return json;
+		}
+		catch(CoreException e)
+		{
+			return(ServicesTools.error(e));
+		}
+	}
 
 }

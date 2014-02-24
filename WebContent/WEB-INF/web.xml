@@ -36,6 +36,15 @@
         <servlet-name>AddPwitt</servlet-name>
         <url-pattern>/pwitts/add</url-pattern>
     </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>SearchPwitt</servlet-name>
+        <servlet-class>servlet.SearchPwitt</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>SearchPwitt</servlet-name>
+        <url-pattern>/pwitts/search</url-pattern>
+    </servlet-mapping>
 
     <servlet>
         <servlet-name>AddFollower</servlet-name>

@@ -33,7 +33,7 @@ public class User extends UserModel {
 			ps.setString(3,username);
 			ps.setString(4,email);
 			ps.setString(5,password);
-			ps.setInt(6,Time.getCurrentTime());
+			ps.setInt(6,Time.getCurrentTimeUnix());
 			ps.executeUpdate();
 			ResultSet rset = ps.getGeneratedKeys();
 			rset.next();
@@ -76,7 +76,7 @@ public class User extends UserModel {
 			int id = rset.getInt(1);
 			
 			String sessionKey = Sha1.generate(
-				id + username + password + Time.getCurrentTime()
+				id + username + password + Time.getCurrentTimeUnix()
 			);
 			
 			sql = "UPDATE Cadene_Panou.Users "
@@ -84,7 +84,7 @@ public class User extends UserModel {
 		    		+ "WHERE id=?;";
 			ps = con.prepareStatement(sql);
 			ps.setString(1,sessionKey);
-			ps.setInt(2,Time.getCurrentTime());
+			ps.setInt(2,Time.getCurrentTimeUnix());
 			ps.setInt(3,id);
 			ps.executeUpdate();
 			
@@ -111,8 +111,6 @@ public class User extends UserModel {
 	{
 		
 		try {
-
- 			Class.forName("com.mysql.jdbc.Driver").newInstance();
 		    Connection con = MySQLDB.getConnection();
 		    
 		    String sql = "UPDATE Cadene_Panou.Users "

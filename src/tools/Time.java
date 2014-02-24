@@ -7,16 +7,18 @@ import java.util.Date;
 
 public class Time {
 	 
-    public static int getCurrentTime()
+	private static long getCurrentTimeMillis(){
+		return System.currentTimeMillis();
+	}
+	
+    public static int getCurrentTimeUnix()
     {
-    	Date date= new Date();
-    	return (int)date.getTime();
+    	return  (int) (getCurrentTimeMillis() / 1000L);
     }
     
     public static Timestamp getCurrentTimestamp()
     {
-    	Date date= new Date();
-    	return new Timestamp(date.getTime());
+    	return new Timestamp(getCurrentTimeMillis());
     }
 	
 }
