@@ -1,7 +1,7 @@
 # [Pwitter](http://getbootstrap.com)
 
 <img src="http://actualite.portail.free.fr/high-tech/11-08-2013/apres-les-nouveaux-derapages-sur-twitter-et-facebook-l-ump-lance-un-appel-au-gouvernement/twitter-hacked.jpg"
- alt="Pwitter" title="Pwitter" align="right" />
+ alt="Pwitter" title="Pwitter" align="right" width="24%"/>
 
 Pwitter is a kind of "Simpler" Twitter developped with JavaEE and TomcatServer using Mysql and MongoDB during the LI328 lectures at UPMC by [Ludovic Denoyer](http://www-connex.lip6.fr/~denoyer/wikihomepage/pmwiki.php), created by [Remi Cadene](http://remicadene.com/) and [David Panou](http://twitter.com/).
 
