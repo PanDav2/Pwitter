@@ -15,20 +15,14 @@ public class AddFriend extends HttpServlet{
 		
 		resp.setContentType("plain/text");
 		
-		if(req.getParameterMap().containsKey("username") &&
-		   req.getParameterMap().containsKey("password") &&
-		   req.getParameterMap().containsKey("firstName") &&
-		   req.getParameterMap().containsKey("email") &&
-		   req.getParameterMap().containsKey("lastName")) {
+		if(req.getParameterMap().containsKey("sessionKey") &&
+		   req.getParameterMap().containsKey("friend_id")) {
 		
-			String username =  req.getParameter("username");
-			String password = req.getParameter("password");
-			String email = req.getParameter("email");
-			String firstName =  req.getParameter("firstName");
-			String lastName = req.getParameter("lastName");
+			String sessionKey =  req.getParameter("sessionKey");
+			int friend_id = Integer.parseInt(req.getParameter("friend_id"));
 		
 			try {
-				resp.getWriter().println(services.User.create(firstName, lastName, username, email, password).toString());
+				resp.getWriter().println(services.Friend.add(sessionKey, friend_id).toString());
 			} catch (JSONException e) {
 				//e.printStackTrace();
 				resp.getWriter().println("{\"status\":\"error\",\"error_code\":\"0\",\"error_msg\":\"JSONError.\"}");

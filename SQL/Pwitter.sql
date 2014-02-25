@@ -1,223 +1,257 @@
-SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
-SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
-SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
+-- phpMyAdmin SQL Dump
+-- version 4.0.10deb1
+-- http://www.phpmyadmin.net
+--
+-- Client: localhost
+-- Généré le: Mar 25 Février 2014 à 14:45
+-- Version du serveur: 5.5.33-1-log
+-- Version de PHP: 5.5.8-3
 
-CREATE SCHEMA IF NOT EXISTS `Cadene_Panou` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci ;
-USE `Cadene_Panou` ;
-
--- -----------------------------------------------------
--- Table `Cadene_Panou`.`Images`
--- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `Cadene_Panou`.`Images` (
-  `id` INT NOT NULL AUTO_INCREMENT ,
-  `url` VARCHAR(100) NOT NULL ,
-  `tinyUrl` VARCHAR(45) NOT NULL ,
-  `created` INT NOT NULL ,
-  `desc` VARCHAR(255) NULL ,
-  PRIMARY KEY (`id`) )
-ENGINE = InnoDB;
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET time_zone = "+00:00";
 
 
--- -----------------------------------------------------
--- Table `Cadene_Panou`.`Users`
--- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `Cadene_Panou`.`Users` (
-  `id` INT NOT NULL AUTO_INCREMENT ,
-  `username` VARCHAR(45) NOT NULL ,
-  `password` VARCHAR(45) NOT NULL ,
-  `firstname` VARCHAR(45) NOT NULL ,
-  `lastname` VARCHAR(45) NOT NULL ,
-  `email` VARCHAR(70) NOT NULL ,
-  `isValid` TINYINT NULL ,
-  `created` INT NOT NULL ,
-  `lastUpdate` INT NULL ,
-  `lastModify` INT NULL ,
-  `image_id` INT NULL ,
-  `sessionKey` VARCHAR(255) NULL ,
-  `lastLogin` INT NULL ,
-  PRIMARY KEY (`id`) ,
-  UNIQUE INDEX `username_UNIQUE` (`username` ASC) ,
-  UNIQUE INDEX `email_UNIQUE` (`email` ASC) ,
-  INDEX `FK_profil_image_idx` (`image_id` ASC) ,
-  CONSTRAINT `FK_profil_image`
-    FOREIGN KEY (`image_id` )
-    REFERENCES `Cadene_Panou`.`Images` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
 
+--
+-- Base de données: `Cadene_Panou`
+--
 
--- -----------------------------------------------------
--- Table `Cadene_Panou`.`Pwitts`
--- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `Cadene_Panou`.`Pwitts` (
-  `id` INT NOT NULL AUTO_INCREMENT ,
-  `title` VARCHAR(45) NULL ,
-  `content` VARCHAR(255) NOT NULL ,
-  `created` INT NOT NULL ,
-  `user_id` INT NOT NULL ,
-  PRIMARY KEY (`id`) ,
-  INDEX `fk_Pwitts_Users1_idx` (`user_id` ASC) ,
-  CONSTRAINT `fk_Pwitts_Users1`
-    FOREIGN KEY (`user_id` )
-    REFERENCES `Cadene_Panou`.`Users` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+-- --------------------------------------------------------
 
+--
+-- Structure de la table `Albums`
+--
 
--- -----------------------------------------------------
--- Table `Cadene_Panou`.`Images_Pwitts`
--- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `Cadene_Panou`.`Images_Pwitts` (
-  `id` INT NOT NULL AUTO_INCREMENT ,
-  `image_id` INT NOT NULL ,
-  `pwitt_id` INT NOT NULL ,
-  PRIMARY KEY (`id`) ,
-  INDEX `fk_Images_Pwitts_Images1_idx` (`image_id` ASC) ,
-  INDEX `fk_Images_Pwitts_Pwitts1_idx` (`pwitt_id` ASC) ,
-  CONSTRAINT `fk_Images_Pwitts_Images1`
-    FOREIGN KEY (`image_id` )
-    REFERENCES `Cadene_Panou`.`Images` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_Images_Pwitts_Pwitts1`
-    FOREIGN KEY (`pwitt_id` )
-    REFERENCES `Cadene_Panou`.`Pwitts` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+CREATE TABLE IF NOT EXISTS `Albums` (
+  `id` int(11) NOT NULL,
+  `title` varchar(45) COLLATE utf8_bin NOT NULL,
+  `desc` text COLLATE utf8_bin NOT NULL,
+  `Users_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_Albums_Users1_idx` (`Users_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
+-- --------------------------------------------------------
 
--- -----------------------------------------------------
--- Table `Cadene_Panou`.`Hashtags`
--- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `Cadene_Panou`.`Hashtags` (
-  `id` INT NOT NULL AUTO_INCREMENT ,
-  `title` VARCHAR(45) NOT NULL ,
-  `created` INT NOT NULL ,
-  `created_by` INT NOT NULL ,
-  PRIMARY KEY (`id`) ,
-  UNIQUE INDEX `UNIQUE` (`title` ASC) ,
-  INDEX `fk_Hashtags_Users1_idx` (`created_by` ASC) ,
-  CONSTRAINT `fk_Hashtags_Users1`
-    FOREIGN KEY (`created_by` )
-    REFERENCES `Cadene_Panou`.`Users` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+--
+-- Structure de la table `Albums_Images`
+--
 
+CREATE TABLE IF NOT EXISTS `Albums_Images` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `album_id` int(11) NOT NULL,
+  `image_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_Albums_Images_Albums1_idx` (`album_id`),
+  KEY `fk_Albums_Images_Images1_idx` (`image_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 
--- -----------------------------------------------------
--- Table `Cadene_Panou`.`Hashtags_Pwitts`
--- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `Cadene_Panou`.`Hashtags_Pwitts` (
-  `id` INT NOT NULL AUTO_INCREMENT ,
-  `hashtag_id` INT NOT NULL ,
-  `pwitt_id` INT NOT NULL ,
-  PRIMARY KEY (`id`) ,
-  INDEX `fk_Hashtages_Pwitts_Pwitts1_idx` (`pwitt_id` ASC) ,
-  INDEX `fk_Hashtages_Pwitts_Hashtags1_idx` (`hashtag_id` ASC) ,
-  CONSTRAINT `fk_Hashtages_Pwitts_Pwitts1`
-    FOREIGN KEY (`pwitt_id` )
-    REFERENCES `Cadene_Panou`.`Pwitts` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_Hashtages_Pwitts_Hashtags1`
-    FOREIGN KEY (`hashtag_id` )
-    REFERENCES `Cadene_Panou`.`Hashtags` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+-- --------------------------------------------------------
 
+--
+-- Structure de la table `Friends`
+--
 
--- -----------------------------------------------------
--- Table `Cadene_Panou`.`Followers`
--- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `Cadene_Panou`.`Followers` (
-  `id` INT NOT NULL ,
-  `user_id` INT NOT NULL ,
-  `follower_id` INT NOT NULL ,
-  `created` INT NOT NULL ,
-  PRIMARY KEY (`id`) ,
-  INDEX `fk_Followers_Users1_idx` (`user_id` ASC) ,
-  INDEX `fk_Followers_Users2_idx` (`follower_id` ASC) ,
-  CONSTRAINT `fk_Followers_Users1`
-    FOREIGN KEY (`user_id` )
-    REFERENCES `Cadene_Panou`.`Users` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_Followers_Users2`
-    FOREIGN KEY (`follower_id` )
-    REFERENCES `Cadene_Panou`.`Users` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+CREATE TABLE IF NOT EXISTS `Friends` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `friend_id` int(11) NOT NULL,
+  `created` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_Followers_Users1_idx` (`user_id`),
+  KEY `fk_Followers_Users2_idx` (`friend_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
+-- --------------------------------------------------------
 
--- -----------------------------------------------------
--- Table `Cadene_Panou`.`Albums`
--- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `Cadene_Panou`.`Albums` (
-  `id` INT NOT NULL ,
-  `title` VARCHAR(45) NOT NULL ,
-  `desc` TEXT NOT NULL ,
-  `Users_id` INT NOT NULL ,
-  PRIMARY KEY (`id`) ,
-  INDEX `fk_Albums_Users1_idx` (`Users_id` ASC) ,
-  CONSTRAINT `fk_Albums_Users1`
-    FOREIGN KEY (`Users_id` )
-    REFERENCES `Cadene_Panou`.`Users` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+--
+-- Structure de la table `Hashtags`
+--
 
+CREATE TABLE IF NOT EXISTS `Hashtags` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(45) COLLATE utf8_bin NOT NULL,
+  `created` int(11) NOT NULL,
+  `created_by` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `UNIQUE` (`title`),
+  KEY `fk_Hashtags_Users1_idx` (`created_by`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 
--- -----------------------------------------------------
--- Table `Cadene_Panou`.`Albums_Images`
--- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `Cadene_Panou`.`Albums_Images` (
-  `id` INT NOT NULL AUTO_INCREMENT ,
-  `album_id` INT NOT NULL ,
-  `image_id` INT NOT NULL ,
-  PRIMARY KEY (`id`) ,
-  INDEX `fk_Albums_Images_Albums1_idx` (`album_id` ASC) ,
-  INDEX `fk_Albums_Images_Images1_idx` (`image_id` ASC) ,
-  CONSTRAINT `fk_Albums_Images_Albums1`
-    FOREIGN KEY (`album_id` )
-    REFERENCES `Cadene_Panou`.`Albums` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_Albums_Images_Images1`
-    FOREIGN KEY (`image_id` )
-    REFERENCES `Cadene_Panou`.`Images` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+-- --------------------------------------------------------
 
+--
+-- Structure de la table `Hashtags_Pwitts`
+--
 
--- -----------------------------------------------------
--- Table `Cadene_Panou`.`Notifs`
--- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `Cadene_Panou`.`Notifs` (
-  `id` INT NOT NULL AUTO_INCREMENT ,
-  `content` VARCHAR(255) NOT NULL ,
-  `isViewed` TINYINT NOT NULL ,
-  `user_id` INT NOT NULL ,
-  `created` INT NOT NULL ,
-  `viewed` INT NOT NULL ,
-  PRIMARY KEY (`id`) ,
-  INDEX `fk_Notifs_Users1_idx` (`user_id` ASC) ,
-  CONSTRAINT `fk_Notifs_Users1`
-    FOREIGN KEY (`user_id` )
-    REFERENCES `Cadene_Panou`.`Users` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+CREATE TABLE IF NOT EXISTS `Hashtags_Pwitts` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `hashtag_id` int(11) NOT NULL,
+  `pwitt_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_Hashtages_Pwitts_Pwitts1_idx` (`pwitt_id`),
+  KEY `fk_Hashtages_Pwitts_Hashtags1_idx` (`hashtag_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 
-USE `Cadene_Panou` ;
+-- --------------------------------------------------------
 
+--
+-- Structure de la table `Images`
+--
 
-SET SQL_MODE=@OLD_SQL_MODE;
-SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
-SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+CREATE TABLE IF NOT EXISTS `Images` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `url` varchar(100) COLLATE utf8_bin NOT NULL,
+  `tinyUrl` varchar(45) COLLATE utf8_bin NOT NULL,
+  `created` int(11) NOT NULL,
+  `desc` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `Images_Pwitts`
+--
+
+CREATE TABLE IF NOT EXISTS `Images_Pwitts` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `image_id` int(11) NOT NULL,
+  `pwitt_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_Images_Pwitts_Images1_idx` (`image_id`),
+  KEY `fk_Images_Pwitts_Pwitts1_idx` (`pwitt_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `Notifs`
+--
+
+CREATE TABLE IF NOT EXISTS `Notifs` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `content` varchar(255) COLLATE utf8_bin NOT NULL,
+  `isViewed` tinyint(4) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `created` int(11) NOT NULL,
+  `viewed` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_Notifs_Users1_idx` (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `Pwitts`
+--
+
+CREATE TABLE IF NOT EXISTS `Pwitts` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(45) COLLATE utf8_bin DEFAULT NULL,
+  `content` varchar(255) COLLATE utf8_bin NOT NULL,
+  `created` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_Pwitts_Users1_idx` (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `Users`
+--
+
+CREATE TABLE IF NOT EXISTS `Users` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `username` varchar(45) COLLATE utf8_bin NOT NULL,
+  `password` varchar(45) COLLATE utf8_bin NOT NULL,
+  `firstname` varchar(45) COLLATE utf8_bin NOT NULL,
+  `lastname` varchar(45) COLLATE utf8_bin NOT NULL,
+  `email` varchar(70) COLLATE utf8_bin NOT NULL,
+  `isValid` tinyint(4) DEFAULT NULL,
+  `created` int(11) NOT NULL,
+  `lastUpdate` int(11) DEFAULT NULL,
+  `lastModify` int(11) DEFAULT NULL,
+  `image_id` int(11) DEFAULT NULL,
+  `sessionKey` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `lastLogin` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `username_UNIQUE` (`username`),
+  UNIQUE KEY `email_UNIQUE` (`email`),
+  KEY `FK_profil_image_idx` (`image_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=9 ;
+
+--
+-- Contenu de la table `Users`
+--
+
+--
+-- Contraintes pour les tables exportées
+--
+
+--
+-- Contraintes pour la table `Albums`
+--
+ALTER TABLE `Albums`
+  ADD CONSTRAINT `fk_Albums_Users1` FOREIGN KEY (`Users_id`) REFERENCES `Users` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Contraintes pour la table `Albums_Images`
+--
+ALTER TABLE `Albums_Images`
+  ADD CONSTRAINT `fk_Albums_Images_Albums1` FOREIGN KEY (`album_id`) REFERENCES `Albums` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `fk_Albums_Images_Images1` FOREIGN KEY (`image_id`) REFERENCES `Images` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Contraintes pour la table `Friends`
+--
+ALTER TABLE `Friends`
+  ADD CONSTRAINT `fk_Followers_Users1` FOREIGN KEY (`user_id`) REFERENCES `Users` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `fk_Followers_Users2` FOREIGN KEY (`friend_id`) REFERENCES `Users` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Contraintes pour la table `Hashtags`
+--
+ALTER TABLE `Hashtags`
+  ADD CONSTRAINT `fk_Hashtags_Users1` FOREIGN KEY (`created_by`) REFERENCES `Users` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Contraintes pour la table `Hashtags_Pwitts`
+--
+ALTER TABLE `Hashtags_Pwitts`
+  ADD CONSTRAINT `fk_Hashtages_Pwitts_Hashtags1` FOREIGN KEY (`hashtag_id`) REFERENCES `Hashtags` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `fk_Hashtages_Pwitts_Pwitts1` FOREIGN KEY (`pwitt_id`) REFERENCES `Pwitts` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Contraintes pour la table `Images_Pwitts`
+--
+ALTER TABLE `Images_Pwitts`
+  ADD CONSTRAINT `fk_Images_Pwitts_Images1` FOREIGN KEY (`image_id`) REFERENCES `Images` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `fk_Images_Pwitts_Pwitts1` FOREIGN KEY (`pwitt_id`) REFERENCES `Pwitts` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Contraintes pour la table `Notifs`
+--
+ALTER TABLE `Notifs`
+  ADD CONSTRAINT `fk_Notifs_Users1` FOREIGN KEY (`user_id`) REFERENCES `Users` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Contraintes pour la table `Pwitts`
+--
+ALTER TABLE `Pwitts`
+  ADD CONSTRAINT `fk_Pwitts_Users1` FOREIGN KEY (`user_id`) REFERENCES `Users` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Contraintes pour la table `Users`
+--
+ALTER TABLE `Users`
+  ADD CONSTRAINT `FK_profil_image` FOREIGN KEY (`image_id`) REFERENCES `Images` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

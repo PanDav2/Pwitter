@@ -43,7 +43,7 @@ public class Pwitt {
 	
 	static public void search(String sessionKey) throws CoreException
 	{
-		int id = AppModel.isAuthentified(sessionKey);
+		int user_id = AppModel.isAuthentified(sessionKey);
 		
 		try {
 			DB db = MongoDB.getConnection();

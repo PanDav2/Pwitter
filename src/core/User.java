@@ -8,13 +8,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.PreparedStatement;
 
-import javax.sql.DataSource;
-
 import tools.MySQLDB;
 import tools.Sha1;
 import tools.Time;
 
-public class User extends UserModel {
+public class User {
 	
 	static public int create(
 			String firstName, String lastName,
