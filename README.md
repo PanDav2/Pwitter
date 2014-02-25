@@ -1,6 +1,9 @@
 # [Pwitter](http://getbootstrap.com)
 
-Pwitter is a kind of "Simpler" Twitter developped with JavaEE and TomcatServer using Mysql and MongoDB during the LI328 lectures at UPMC by [Ludovic Denoyer](http://www-connex.lip6.fr/~denoyer/wikihomepage/pmwiki.php), created by [Rémi Cadène](http://remicadene.com/HTML) and [David Panou](http://twitter.com/).
+<img src="http://actualite.portail.free.fr/high-tech/11-08-2013/apres-les-nouveaux-derapages-sur-twitter-et-facebook-l-ump-lance-un-appel-au-gouvernement/twitter-hacked.jpg"
+ alt="Pwitter" title="Pwitter" align="right" width="24%"/>
+
+Pwitter is a kind of "Simpler" Twitter developped with JavaEE and TomcatServer using Mysql and MongoDB during the LI328 lectures at UPMC by [Ludovic Denoyer](http://www-connex.lip6.fr/~denoyer/wikihomepage/pmwiki.php), created by [Remi Cadene](http://remicadene.com/) and [David Panou](http://twitter.com/).
 
 ## Table of contents
 
@@ -12,7 +15,7 @@ Pwitter is a kind of "Simpler" Twitter developped with JavaEE and TomcatServer u
 
 ## Quick start
 
-- Clone the repo: `git clone https://github.com/tamazy/pwitter.git`. in your root folder.
+- Clone the repo: `git clone https://github.com/Tamazy/Pwitter.git`. in your root folder.
 
 ### What's included
 
@@ -20,19 +23,14 @@ Within the download you'll find the following directories and files, logically g
 
 ```
 pwitter/
+├── SQL/
 ├── WebContent/
-│   ├── bootstrap.css
-│   ├── bootstrap.min.css
-│   ├── bootstrap-theme.css
-│   └── bootstrap-theme.min.css
 ├── src/
 │   ├── core
-│   └── servlet
+│   ├── services
+│   ├── servlet
+│   └── tools
 └── build/
-    ├── glyphicons-halflings-regular.eot
-    ├── glyphicons-halflings-regular.svg
-    ├── glyphicons-halflings-regular.ttf
-    └── glyphicons-halflings-regular.woff
 ```
 
 
@@ -50,7 +48,7 @@ pwitter/
 
 **Remi Cadene**
 
-- <http://remicadene.com/HTML>
+- <http://remicadene.com/>
 - <http://github.com/Tamazy>
 
 **David Panou**
