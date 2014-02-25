@@ -17,7 +17,7 @@ public class Pwitt {
 
 	static public void add(String sessionKey, String title, String content) throws CoreException
 	{
-		int id = AppModel.isAuthentified(sessionKey);
+		int id = CoreTools.isAuthentified(sessionKey);
 		
 		try {
 			DB db = MongoDB.getConnection();
@@ -32,6 +32,7 @@ public class Pwitt {
 			coll.insert(doc);
 			
 			
+			
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -43,7 +44,7 @@ public class Pwitt {
 	
 	static public void search(String sessionKey) throws CoreException
 	{
-		int user_id = AppModel.isAuthentified(sessionKey);
+		int user_id = CoreTools.isAuthentified(sessionKey);
 		
 		try {
 			DB db = MongoDB.getConnection();
@@ -53,6 +54,14 @@ public class Pwitt {
 			while(cur.hasNext()){
 				throw new CoreException(cur.next().toString(),12);
 			}
+			
+			/*Set<String> colls = db.getCollectionNames();
+
+			for (String s : colls) {
+			    System.out.println(s);
+			}
+			*/
+			cur.close();
 			
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block

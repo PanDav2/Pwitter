@@ -51,26 +51,17 @@
         <servlet-class>servlet.AddFollower</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>AddFollower</servlet-name>
-        <url-pattern>/followers/add</url-pattern>
+        <servlet-name>AddFriend</servlet-name>
+        <url-pattern>/friends/add</url-pattern>
     </servlet-mapping>
 
     <servlet>
-        <servlet-name>RemoveFollower</servlet-name>
-        <servlet-class>servlet.RemoveFoller</servlet-class>
+        <servlet-name>RemoveFriend</servlet-name>
+        <servlet-class>servlet.RemoveFriend</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>AddFollower</servlet-name>
-        <url-pattern>/followers/remove</url-pattern>
-    </servlet-mapping>
-   
-    <servlet>
-        <servlet-name>TestMongo</servlet-name>
-        <servlet-class>servlet.TestMongo</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>TestMongo</servlet-name>
-        <url-pattern>/test/mongo</url-pattern>
+        <servlet-name>RemoveFriend</servlet-name>
+        <url-pattern>/friends/remove</url-pattern>
     </servlet-mapping>
     
     

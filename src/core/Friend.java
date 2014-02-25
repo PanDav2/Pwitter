@@ -15,7 +15,7 @@ public class Friend {
 	static public int add(String sessionKey, int friend_id) throws CoreException
 	{
 
-		int user_id = AppModel.isAuthentified(sessionKey);
+		int user_id = CoreTools.isAuthentified(sessionKey);
 		
 		try {
 
@@ -52,7 +52,7 @@ public class Friend {
 	static public int remove(String sessionKey, int friend_id) throws CoreException
 	{
 
-		int user_id = AppModel.isAuthentified(sessionKey);
+		int user_id = CoreTools.isAuthentified(sessionKey);
 		
 		try {
 
