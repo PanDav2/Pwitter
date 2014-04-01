@@ -13,30 +13,7 @@ public class RemoveFriend extends HttpServlet{
 	@Override
 	protected void doGet (HttpServletRequest req, HttpServletResponse resp) throws IOException{
 		
-		resp.setContentType("plain/text");
 		
-		if(req.getParameterMap().containsKey("username") &&
-		   req.getParameterMap().containsKey("password") &&
-		   req.getParameterMap().containsKey("firstName") &&
-		   req.getParameterMap().containsKey("email") &&
-		   req.getParameterMap().containsKey("lastName")) {
-		
-			String username =  req.getParameter("username");
-			String password = req.getParameter("password");
-			String email = req.getParameter("email");
-			String firstName =  req.getParameter("firstName");
-			String lastName = req.getParameter("lastName");
-		
-			try {
-				resp.getWriter().println(services.User.create(firstName, lastName, username, email, password).toString());
-			} catch (JSONException e) {
-				//e.printStackTrace();
-				resp.getWriter().println("{\"status\":\"error\",\"error_code\":\"0\",\"error_msg\":\"JSONError.\"}");
-			}
-			
-		} else {
-				resp.getWriter().println("{\"status\":\"error\",\"error_code\":\"1\",\"error_msg\":\"Au moins un argument nein valide.\"}");
-		}
 	
 	}
 	

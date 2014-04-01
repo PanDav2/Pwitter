@@ -8,17 +8,16 @@ import services.ServicesTools;
 
 public class User {
 
-	static public JSONObject create(String firstName, String lastName, String username, String email, String password) throws JSONException{
+	static public JSONObject register(String firstname, String lastname, String email, String password) throws JSONException{
 		try
 		{
-			int id = core.User.create(firstName, lastName, username, email, password);
+			int id = core.User.register(firstname, lastname, email, password);
 			JSONObject json = new JSONObject();
 			JSONObject jsonUser = new JSONObject();
 			json.put("statut", "ok");
 			jsonUser.put("id", id);
-			jsonUser.put("firstName", firstName);
-			jsonUser.put("lastName", lastName);
-			jsonUser.put("username", username);
+			jsonUser.put("firstname", firstname);
+			jsonUser.put("lastname", lastname);
 			jsonUser.put("email", email);
 			jsonUser.put("password", password);
 			json.put("user", jsonUser);
@@ -30,16 +29,16 @@ public class User {
 		}
 	}
 
-	static public JSONObject login(String username, String password) throws JSONException {
+	static public JSONObject login(String email, String password) throws JSONException {
 		try
 		{
-			String sessionKey = core.User.login(username, password);
+			String session = core.User.login(email, password);
 			JSONObject json = new JSONObject();
 			JSONObject jsonUser = new JSONObject();
 			json.put("statut", "ok");
-			jsonUser.put("username", username);
+			jsonUser.put("email", email);
 			jsonUser.put("password", password);
-			jsonUser.put("sessionKey", sessionKey);
+			jsonUser.put("session", session);
 			json.put("user", jsonUser);
 			return json;
 		}
@@ -50,10 +49,10 @@ public class User {
 		
 	}
 	
-	static public JSONObject logout(String sessionKey) throws JSONException {
+	static public JSONObject logout(String session) throws JSONException {
 		try
 		{
-			core.User.logout(sessionKey);
+			core.User.logout(session);
 			JSONObject json = new JSONObject();
 			json.put("statut", "ok");
 			return json;

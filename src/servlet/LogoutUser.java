@@ -8,22 +8,20 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONException;
 
-public class Login extends HttpServlet{
+public class LogoutUser extends HttpServlet{
 	
-	//http://li328.lip6.fr:8280/CADENE_PANOU/users/login?username=Tamazy&password=azerty
+	//http://li328.lip6.fr:8280/CADENE_PANOU/users/logout?sessionKey=
 	
 	protected void doGet (HttpServletRequest req, HttpServletResponse resp) throws IOException{
 		
 		resp.setContentType("plain/text");
 		
-		if(req.getParameterMap().containsKey("username") &&
-		   req.getParameterMap().containsKey("password")) {
+		if(req.getParameterMap().containsKey("session")) {
 		
-			String username =  req.getParameter("username");
-			String password = req.getParameter("password");
+			String sessionKey =  req.getParameter("session");
 		
 			try {
-				resp.getWriter().println(services.User.login(username, password).toString());
+				resp.getWriter().println(services.User.logout(sessionKey).toString());
 			} catch (JSONException e) {
 				resp.getWriter().println(ServletTools.JSONError());
 			}

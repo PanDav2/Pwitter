@@ -3,30 +3,30 @@
 
 
     <servlet>
-        <servlet-name>Login</servlet-name>
-        <servlet-class>servlet.Login</servlet-class>
+        <servlet-name>LoginUser</servlet-name>
+        <servlet-class>servlet.LoginUser</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>Login</servlet-name>
-        <url-pattern>/users/login</url-pattern>
+        <servlet-name>LoginUser</servlet-name>
+        <url-pattern>/user/login</url-pattern>
     </servlet-mapping>
 
     <servlet>
-        <servlet-name>Logout</servlet-name>
-        <servlet-class>servlet.Logout</servlet-class>
+        <servlet-name>LogoutUser</servlet-name>
+        <servlet-class>servlet.LogoutUser</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>Logout</servlet-name>
-        <url-pattern>/users/logout</url-pattern>
+        <servlet-name>LogoutUser</servlet-name>
+        <url-pattern>/user/logout</url-pattern>
     </servlet-mapping>
 
 	<servlet>
-        <servlet-name>CreateUser</servlet-name>
-        <servlet-class>servlet.CreateUser</servlet-class>
+        <servlet-name>RegisterUser</servlet-name>
+        <servlet-class>servlet.RegisterUser</servlet-class>
 	</servlet>
 	<servlet-mapping>
-        <servlet-name>CreateUser</servlet-name>
-        <url-pattern>/users/create</url-pattern>
+        <servlet-name>RegisterUser</servlet-name>
+        <url-pattern>/user/register</url-pattern>
     </servlet-mapping>
 
     <servlet>
@@ -35,7 +35,7 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>AddPwitt</servlet-name>
-        <url-pattern>/pwitts/add</url-pattern>
+        <url-pattern>/pwitt/add</url-pattern>
     </servlet-mapping>
     
     <servlet>
@@ -44,7 +44,7 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>SearchPwitt</servlet-name>
-        <url-pattern>/pwitts/search</url-pattern>
+        <url-pattern>/pwitt/search</url-pattern>
     </servlet-mapping>
 
     <servlet>
@@ -53,7 +53,7 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>AddFriend</servlet-name>
-        <url-pattern>/friends/add</url-pattern>
+        <url-pattern>/friend/add</url-pattern>
     </servlet-mapping>
 
 	<servlet>
@@ -62,7 +62,7 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>AddFollower</servlet-name>
-        <url-pattern>/followers/add</url-pattern>
+        <url-pattern>/follower/add</url-pattern>
     </servlet-mapping>
       
       <servlet>
@@ -71,7 +71,7 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>RemoveFriend</servlet-name>
-        <url-pattern>/friends/remove</url-pattern>
+        <url-pattern>/friend/remove</url-pattern>
     </servlet-mapping>
     
  </web-app>

@@ -14,24 +14,23 @@ import tools.Time;
 
 public class User {
 	
-	static public int create(
-			String firstName, String lastName,
-			String username, String email, String password) throws CoreException
+	static public int register(
+			String firstname, String lastname,
+			String email, String password) throws CoreException
 	{
 
 		try {
 
 		    Connection con = MySQLDB.getConnection();
 		    String sql = "INSERT INTO Cadene_Panou.Users "
-		    		   + "(firstName,lastName,username,email,password,created) "
-		    		   + "VALUES (?,?,?,?,?,?);";
+		    		   + "(firstname,lastname,email,password,created) "
+		    		   + "VALUES (?,?,?,?,?);";
 			PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-			ps.setString(1,firstName);
-			ps.setString(2,lastName);
-			ps.setString(3,username);
-			ps.setString(4,email);
-			ps.setString(5,password);
-			ps.setInt(6,Time.getCurrentTimeUnix());
+			ps.setString(1,firstname);
+			ps.setString(2,lastname);
+			ps.setString(3,email);
+			ps.setString(4,password);
+			ps.setInt(5,Time.getCurrentTimeUnix());
 			ps.executeUpdate();
 			ResultSet rset = ps.getGeneratedKeys();
 			rset.next();
@@ -53,7 +52,7 @@ public class User {
 		}
 	}
 
-	public static String login(String username, String password) throws CoreException
+	public static String login(String email, String password) throws CoreException
 	{
 		
 		try {
@@ -61,32 +60,35 @@ public class User {
  			Class.forName("com.mysql.jdbc.Driver").newInstance();
 		    Connection con = MySQLDB.getConnection();
 		    
-		    String sql = "SELECT id, username, password "
+		    String sql = "SELECT id, email, password "
 		    		   + "FROM Cadene_Panou.Users "
-		    		   + "WHERE username = ?;";
+		    		   + "WHERE email = ?;";
 			PreparedStatement ps = con.prepareStatement(sql);
-			ps.setString(1,username);
+			ps.setString(1,email);
 			ResultSet rset = ps.executeQuery();
-			rset.next();
+			if(!rset.next()){
+				throw new CoreException(2000);
+			}
+			// password verified
 			if(!rset.getString(3).equals(password)){
-				throw new CoreException(2);
+				throw new CoreException(2001);
 			}
 			int id = rset.getInt(1);
 			
-			String sessionKey = Sha1.generate(
-				id + username + password + Time.getCurrentTimeUnix()
+			String session = Sha1.generate(
+				id + email + password + Time.getCurrentTimeUnix()
 			);
 			
 			sql = "UPDATE Cadene_Panou.Users "
-					+ "SET sessionKey=?, lastLogin=? "
+					+ "SET session=?, lastLogin=? "
 		    		+ "WHERE id=?;";
 			ps = con.prepareStatement(sql);
-			ps.setString(1,sessionKey);
+			ps.setString(1,session);
 			ps.setInt(2,Time.getCurrentTimeUnix());
 			ps.setInt(3,id);
 			ps.executeUpdate();
 			
-		    return sessionKey;
+		    return session;
 
 		} catch (ClassNotFoundException e) {
 		    throw new RuntimeException("Cannot find the driver in the classpath!", e);
@@ -105,7 +107,7 @@ public class User {
 	
 	}
 
-	public static void logout(String sessionKey) throws CoreException
+	public static void logout(String session) throws CoreException
 	{
 		
 		try {
@@ -113,9 +115,9 @@ public class User {
 		    
 		    String sql = "UPDATE Cadene_Panou.Users "
 					+ "SET lastLogin=0 "
-		    		+ "WHERE sessionKey=?;";
+		    		+ "WHERE session=?;";
 			PreparedStatement ps = con.prepareStatement(sql);
-			ps.setString(1,sessionKey);
+			ps.setString(1,session);
 			ps.executeUpdate();
 
 		} catch (ClassNotFoundException e) {

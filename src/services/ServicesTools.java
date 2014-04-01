@@ -10,9 +10,11 @@ public class ServicesTools {
 
 	public static JSONObject error(String msg, int id) throws JSONException {
 		JSONObject json = new JSONObject();
+		JSONObject jsonError = new JSONObject();
 		json.put("status", "error");
-		json.put("error_code", String.valueOf(id));
-		json.put("error_msg", msg);
+		jsonError.put("code", String.valueOf(id));
+		jsonError.put("msg", msg);
+		json.put("error", jsonError);
 		return json;
 	}
 	
