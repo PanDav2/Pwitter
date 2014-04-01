@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
  <web-app>
 
+
     <servlet>
         <servlet-name>Login</servlet-name>
         <servlet-class>servlet.Login</servlet-class>
@@ -47,15 +48,24 @@
     </servlet-mapping>
 
     <servlet>
-        <servlet-name>AddFollower</servlet-name>
-        <servlet-class>servlet.AddFollower</servlet-class>
+        <servlet-name>AddFriend</servlet-name>
+        <servlet-class>servlet.AddFriend</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>AddFriend</servlet-name>
         <url-pattern>/friends/add</url-pattern>
     </servlet-mapping>
 
-    <servlet>
+	<servlet>
+        <servlet-name>AddFollower</servlet-name>
+        <servlet-class>servlet.AddFollower</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AddFollower</servlet-name>
+        <url-pattern>/followers/add</url-pattern>
+    </servlet-mapping>
+      
+      <servlet>
         <servlet-name>RemoveFriend</servlet-name>
         <servlet-class>servlet.RemoveFriend</servlet-class>
     </servlet>
@@ -63,6 +73,5 @@
         <servlet-name>RemoveFriend</servlet-name>
         <url-pattern>/friends/remove</url-pattern>
     </servlet-mapping>
-    
     
  </web-app>

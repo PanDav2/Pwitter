@@ -119,12 +119,56 @@ RechercheCommentaires.traiterReponseJSON = function(json_text)
 	//alert(json_text);
 	var obj = JSON.parse(json_text,RechercheCommentaires.reviver);
 	if(obj.erreur == undefined){
-		alert(obj.getHtml());
+		//alert(obj.getHtml());
 		$("#comments").prepend(obj.getHtml());
 	}else{
 		alert(obj.erreur);
 	}
 }
+
+
+/* Objet Follower */
+
+function Follower()
+{
+	
+}
+
+// TODO modifier
+Follower.prototype.ajouter = function(id)
+{
+	$.ajax({
+		type:"GET",
+		url:"http://li328.lip6.fr/CADENE_PANOU/addComment",
+		data:"key="+environnement.key+"&text="+text,
+		datatype:"json",
+		success: Follower.traiterReponseJSON(reponse,id),
+		error: function(msg){alert(msg);}
+	});
+}
+
+// TODO modifier
+Follower.prototype.traiterAjouter = function(reponse,id)
+{
+	if((reponse.erreur != undefined) && (reponse.erreur != 0)){
+		alert(reponse.erreur);
+	}else{
+		var user = environnement.user[id];
+		user.modifierStatus();
+		var comments = environnement.recherche.resultats;
+		for(var i in comments){
+			if(comments[i].auteur.id == id){
+				$("#commentaire_"+comments[i].id).replacewith(comments[i].getHTML());
+			}
+		}
+	}
+}
+
+Follower.prototype.supprimer = function()
+{
+	
+}
+
 	
 /* Function EnvoiCommentaires */
 
@@ -140,5 +184,26 @@ function envoiCommentaires()
 	return (JSON.stringify(reco));
 }
 
+/* Function SupFriend */
+
+function unFollow(id){
+
+}
+
+/* Function throwError */
+
+// TODO modifier
+function throwError(msg){
+	var box = "<div id=\"error\">" + msg + "</div>";
+	$("form").prepend(box);
+}
+
+/* Function disconnect */
+
+function disconnect(){
+	// TODO .actif ?
+	environnement.actif = undefined;
+	// TODO ajax gererDeconnexion		
+}
 
 
