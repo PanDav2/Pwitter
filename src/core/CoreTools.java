@@ -10,7 +10,7 @@ import tools.Time;
 
 public class CoreTools {
 	
-	public static int isAuthentified(String sessionKey) throws CoreException{
+	public static int isAuthentified(String session) throws CoreException{
 		
 		try
 		{
@@ -18,11 +18,12 @@ public class CoreTools {
 		    
 		    String sql = "SELECT id, lastLogin "
 		    		   + "FROM Cadene_Panou.Users "
-		    		   + "WHERE sessionKey = ? LIMIT 1;";
+		    		   + "WHERE session = ? LIMIT 1;";
 			PreparedStatement ps = con.prepareStatement(sql);
-			ps.setString(1,sessionKey);
+			ps.setString(1,session);
 			ResultSet rset = ps.executeQuery();
-			rset.next();
+			if(!rset.next())
+				throw new CoreException(9);
 			int id = rset.getInt(1);
 			int lastLogin = rset.getInt(2);
 			

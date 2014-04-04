@@ -118,7 +118,7 @@ function ajaxLogin(email,password,error){
 				$(error).show().text(error_code + " : " + error_msg);
 			}
 		}else{
-			location.replace("index.html?sessionKey="+json.user.sessionKey);
+			location.replace("index.html?session="+json.user.session);
 		}
 	});
 	ajax.fail(function(){

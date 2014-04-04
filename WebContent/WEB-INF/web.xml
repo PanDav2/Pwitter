@@ -39,12 +39,12 @@
     </servlet-mapping>
     
     <servlet>
-        <servlet-name>SearchPwitt</servlet-name>
-        <servlet-class>servlet.SearchPwitt</servlet-class>
+        <servlet-name>FindPwitt</servlet-name>
+        <servlet-class>servlet.FindPwitt</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>SearchPwitt</servlet-name>
-        <url-pattern>/pwitt/search</url-pattern>
+        <servlet-name>FindPwitt</servlet-name>
+        <url-pattern>/pwitt/find</url-pattern>
     </servlet-mapping>
 
     <servlet>
@@ -65,13 +65,22 @@
         <url-pattern>/follower/add</url-pattern>
     </servlet-mapping>
       
-      <servlet>
+    <servlet>
         <servlet-name>RemoveFriend</servlet-name>
         <servlet-class>servlet.RemoveFriend</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>RemoveFriend</servlet-name>
         <url-pattern>/friend/remove</url-pattern>
+    </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>MapReduce</servlet-name>
+        <servlet-class>servlet.MapReduce</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>MapReduce</servlet-name>
+        <url-pattern>/server/mapreduce</url-pattern>
     </servlet-mapping>
     
  </web-app>

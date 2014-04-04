@@ -7,10 +7,10 @@ import core.CoreException;
 
 public class Pwitt {
 
-	static public JSONObject add(String sessionKey, String title, String content) throws JSONException{
+	static public JSONObject add(String session, String title, String content) throws JSONException{
 		try
 		{
-			core.Pwitt.add(sessionKey,title,content);
+			core.Pwitt.add(session,title,content);
 			JSONObject json = new JSONObject();
 			json.put("statut", "ok");
 			return json;
@@ -21,12 +21,13 @@ public class Pwitt {
 		}
 	}
 	
-	static public JSONObject search(String sessionKey) throws JSONException{
+	static public JSONObject find(String session) throws JSONException{
 		try
 		{
-			core.Pwitt.search(sessionKey);
+			String d = core.Pwitt.find(session);
 			JSONObject json = new JSONObject();
 			json.put("statut", "ok");
+			json.put("debug", d);
 			return json;
 		}
 		catch(CoreException e)

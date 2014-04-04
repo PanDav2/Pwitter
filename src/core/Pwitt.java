@@ -15,9 +15,9 @@ import tools.Time;
 
 public class Pwitt {
 
-	static public void add(String sessionKey, String title, String content) throws CoreException
+	static public void add(String session, String title, String content) throws CoreException
 	{
-		int id = CoreTools.isAuthentified(sessionKey);
+		int id = CoreTools.isAuthentified(session);
 		
 		try {
 			DB db = MongoDB.getConnection();
@@ -34,25 +34,24 @@ public class Pwitt {
 			
 			
 		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new CoreException(e.getMessage(),12);
 		} catch (MongoException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new CoreException(e.getMessage(),12);
 		}
 	}
 	
-	static public void search(String sessionKey) throws CoreException
+	static public String find(String session) throws CoreException
 	{
-		int user_id = CoreTools.isAuthentified(sessionKey);
+		int user_id = CoreTools.isAuthentified(session);
 		
 		try {
+			String s = "";
 			DB db = MongoDB.getConnection();
 			
 			DBCollection coll = db. getCollection ("Pwitts");
 			DBCursor cur = coll.find();
 			while(cur.hasNext()){
-				throw new CoreException(cur.next().toString(),12);
+				s += cur.next().toString();
 			}
 			
 			/*Set<String> colls = db.getCollectionNames();
@@ -62,13 +61,12 @@ public class Pwitt {
 			}
 			*/
 			cur.close();
+			return s;
 			
 		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new CoreException(e.getMessage(),12);
 		} catch (MongoException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new CoreException(e.getMessage(),12);
 		}
 		
 	}

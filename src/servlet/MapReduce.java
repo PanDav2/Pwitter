@@ -8,25 +8,20 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONException;
 
-public class AddPwitt extends HttpServlet{
+public class MapReduce extends HttpServlet{
 	
-	@Override
+	//http://li328.lip6.fr:8280/CADENE_PANOU/users/login?username=Tamazy&password=azerty
+	
 	protected void doGet (HttpServletRequest req, HttpServletResponse resp) throws IOException{
 		
 		resp.setContentType("plain/text");
 		
-		if(req.getParameterMap().containsKey("session") &&
-		   req.getParameterMap().containsKey("content")) {
-			
-			String session = req.getParameter("session");
-			String content = req.getParameter("content");
-			String title = null;
-			
-			if(req.getParameterMap().containsKey("title"))
-				title = req.getParameter("title");
+		if(req.getParameterMap().containsKey("password")) {
+		
+			String password = req.getParameter("password");
 		
 			try {
-				resp.getWriter().println(services.Pwitt.add(session,title,content).toString());
+				resp.getWriter().println(services.Server.mapReduce(password).toString());
 			} catch (JSONException e) {
 				resp.getWriter().println(ServletTools.JSONError());
 			}
@@ -34,7 +29,6 @@ public class AddPwitt extends HttpServlet{
 		} else {
 				resp.getWriter().println(ServletTools.ArgError());
 		}
-	
 	
 	}
 	
