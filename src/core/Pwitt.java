@@ -1,6 +1,7 @@
 package core;
 
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -17,7 +18,7 @@ public class Pwitt {
 
 	static public void add(String session, String title, String content) throws CoreException
 	{
-		int id = CoreTools.isAuthentified(session);
+		int id = User.isAuthentified(session);
 		
 		try {
 			DB db = MongoDB.getConnection();
@@ -40,26 +41,34 @@ public class Pwitt {
 		}
 	}
 	
-	static public String find(String session) throws CoreException
+	static public ArrayList<String> find(String session,String words,String dofriends) throws CoreException
 	{
-		int user_id = CoreTools.isAuthentified(session);
+		int user_id;
 		
+		if(session == "" && words == "" && dofriends == "")
+			return _find();
+		
+		if(session != "")
+			user_id = User.isAuthentified(session);
+		
+		return null;
+		
+	}
+	/**
+	 * Trouver tous les pwitts
+	 * @return
+	 */
+	static private ArrayList<String> _find() throws CoreException
+	{
 		try {
-			String s = "";
+			ArrayList<String> s = new ArrayList<String>();
 			DB db = MongoDB.getConnection();
 			
 			DBCollection coll = db. getCollection ("Pwitts");
 			DBCursor cur = coll.find();
 			while(cur.hasNext()){
-				s += cur.next().toString();
+				s.add( cur.next().toString() );
 			}
-			
-			/*Set<String> colls = db.getCollectionNames();
-
-			for (String s : colls) {
-			    System.out.println(s);
-			}
-			*/
 			cur.close();
 			return s;
 			
@@ -68,7 +77,6 @@ public class Pwitt {
 		} catch (MongoException e) {
 			throw new CoreException(e.getMessage(),12);
 		}
-		
 	}
 	
 }

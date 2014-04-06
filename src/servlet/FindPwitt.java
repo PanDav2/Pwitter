@@ -15,18 +15,27 @@ public class FindPwitt extends HttpServlet{
 		
 		resp.setContentType("plain/text");
 		
+		String session = "";
+		String words = "";
+		String dofriends = "";
+		
 		if(req.getParameterMap().containsKey("session")) {
-			String session = req.getParameter("session");
-			
-			try {
-				resp.getWriter().println(services.Pwitt.find(session).toString());
-			} catch (JSONException e) {
-				resp.getWriter().println(ServletTools.JSONError());
-			}
-			
-		} else {
-				resp.getWriter().println(ServletTools.ArgError());
+			session = req.getParameter("session");
 		}
+		if(req.getParameterMap().containsKey("words")) {
+			words = req.getParameter("words");
+		}
+		if(req.getParameterMap().containsKey("dofriends")) {
+			dofriends = req.getParameter("dofriends");
+		}
+		
+			
+		try {
+			resp.getWriter().println(services.Pwitt.find(session,words,dofriends).toString());
+		} catch (JSONException e) {
+			resp.getWriter().println(ServletTools.JSONError());
+		}
+			
 	
 	
 	}

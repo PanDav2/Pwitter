@@ -12,10 +12,10 @@ import tools.Time;
 
 public class Friend {
 	
-	static public int add(String sessionKey, int friend_id) throws CoreException
+	static public int add(String session, int friend_id) throws CoreException
 	{
 
-		int user_id = CoreTools.isAuthentified(sessionKey);
+		int user_id = User.isAuthentified(session);
 		
 		try {
 
@@ -49,10 +49,10 @@ public class Friend {
 	}
 	
 	
-	static public int remove(String sessionKey, int friend_id) throws CoreException
+	static public int remove(String session, int friend_id) throws CoreException
 	{
 
-		int user_id = CoreTools.isAuthentified(sessionKey);
+		int user_id = User.isAuthentified(session);
 		
 		try {
 

@@ -132,4 +132,74 @@ public class User {
 		
 	}
 	
+	public static String getEmail(String session) throws CoreException{
+		
+		try
+		{
+		    Connection con = MySQLDB.getConnection();
+		    
+		    String sql = "SELECT email, lastLogin "
+		    		   + "FROM Cadene_Panou.Users "
+		    		   + "WHERE session = ? LIMIT 1;";
+			PreparedStatement ps = con.prepareStatement(sql);
+			ps.setString(1,session);
+			ResultSet rset = ps.executeQuery();
+			if(!rset.next())
+				throw new CoreException(9);
+			String email = rset.getString(1);
+			int lastLogin = rset.getInt(2);
+			
+			if(Time.getCurrentTimeUnix() - lastLogin > Config.time_without_login){
+				throw new CoreException(9);
+			}
+			
+			return email;
+			
+			
+		} catch (ClassNotFoundException e) {
+		    throw new RuntimeException("Cannot find the driver in the classpath!", e);
+		} catch (InstantiationException e) {
+			throw new CoreException(e.getMessage(),12);
+		} catch (IllegalAccessException e) {
+			throw new CoreException(e.getMessage(),11);
+		} catch (SQLException e) {
+			throw new CoreException(e.getMessage(),10);
+		}
+	}
+	
+	public static int isAuthentified(String session) throws CoreException{
+		
+		try
+		{
+		    Connection con = MySQLDB.getConnection();
+		    
+		    String sql = "SELECT id, lastLogin "
+		    		   + "FROM Cadene_Panou.Users "
+		    		   + "WHERE session = ? LIMIT 1;";
+			PreparedStatement ps = con.prepareStatement(sql);
+			ps.setString(1,session);
+			ResultSet rset = ps.executeQuery();
+			if(!rset.next())
+				throw new CoreException(9);
+			int id = rset.getInt(1);
+			int lastLogin = rset.getInt(2);
+			
+			if(Time.getCurrentTimeUnix() - lastLogin > Config.time_without_login){
+				throw new CoreException(9);
+			}
+			
+			return id;
+			
+			
+		} catch (ClassNotFoundException e) {
+		    throw new RuntimeException("Cannot find the driver in the classpath!", e);
+		} catch (InstantiationException e) {
+			throw new CoreException(e.getMessage(),12);
+		} catch (IllegalAccessException e) {
+			throw new CoreException(e.getMessage(),11);
+		} catch (SQLException e) {
+			throw new CoreException(e.getMessage(),10);
+		}
+	}
+	
 }

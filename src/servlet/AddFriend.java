@@ -20,21 +20,20 @@ public class AddFriend extends HttpServlet{
 		
 		resp.setContentType("plain/text");
 		
-		if(req.getParameterMap().containsKey("sessionKey") &&
+		if(req.getParameterMap().containsKey("session") &&
 		   req.getParameterMap().containsKey("friend_id")) {
 		
-			String sessionKey =  req.getParameter("sessionKey");
+			String session =  req.getParameter("session");
 			int friend_id = Integer.parseInt(req.getParameter("friend_id"));
 		
 			try {
-				resp.getWriter().println(services.Friend.add(sessionKey, friend_id).toString());
+				resp.getWriter().println(services.Friend.add(session,friend_id).toString());
 			} catch (JSONException e) {
-				//e.printStackTrace();
-				resp.getWriter().println("{\"status\":\"error\",\"error_code\":\"0\",\"error_msg\":\"JSONError.\"}");
+				resp.getWriter().println(ServletTools.JSONError());
 			}
 			
 		} else {
-				resp.getWriter().println("{\"status\":\"error\",\"error_code\":\"1\",\"error_msg\":\"Au moins un argument nein valide.\"}");
+				resp.getWriter().println(ServletTools.ArgError());
 		}
 	
 	}
