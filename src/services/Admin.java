@@ -1,20 +1,27 @@
 package services;
 
+import java.util.ArrayList;
+
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import core.CoreException;
 import services.ServicesTools;
 
-public class Server {
+public class Admin {
 
-	static public JSONObject mapReduce(String password) throws JSONException{
+	static public JSONObject WordsMapReduce(String password) throws JSONException{
 		try
 		{
-			String d = core.Server.mapReduce(password);
+			ArrayList<String> words = core.Admin.WordsMR(password);
+			
 			JSONObject json = new JSONObject();
+			
 			json.put("statut", "ok");
-			json.put("debug", d);
+			
+			json.put("words",  new JSONArray(words));
+			
 			return json;
 		}
 		catch(CoreException e)

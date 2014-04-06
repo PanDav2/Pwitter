@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class RegisterUser extends HttpServlet{
+public class UserRegister extends HttpServlet{
 	
 	//http://li328.lip6.fr:8280/CADENE_PANOU/user/register?username=Tamazy&password=azerty&firstName=Remi&lastName=Cadene&email=remicadene@laposte.net
 	

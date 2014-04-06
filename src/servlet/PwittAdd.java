@@ -8,26 +8,21 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONException;
 
-public class AddFriend extends HttpServlet{
+public class PwittAdd extends HttpServlet{
 	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-
 	@Override
 	protected void doGet (HttpServletRequest req, HttpServletResponse resp) throws IOException{
 		
 		resp.setContentType("plain/text");
 		
 		if(req.getParameterMap().containsKey("session") &&
-		   req.getParameterMap().containsKey("friend_id")) {
-		
-			String session =  req.getParameter("session");
-			int friend_id = Integer.parseInt(req.getParameter("friend_id"));
-		
+		   req.getParameterMap().containsKey("content")) {
+			
+			String session = req.getParameter("session");
+			String content = req.getParameter("content");
+			
 			try {
-				resp.getWriter().println(services.Friend.add(session,friend_id).toString());
+				resp.getWriter().println(services.Pwitt.add(session,content).toString());
 			} catch (JSONException e) {
 				resp.getWriter().println(ServletTools.JSONError());
 			}
@@ -35,6 +30,7 @@ public class AddFriend extends HttpServlet{
 		} else {
 				resp.getWriter().println(ServletTools.ArgError());
 		}
+	
 	
 	}
 	

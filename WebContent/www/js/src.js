@@ -2,6 +2,9 @@
 	
 environnement = {}; //new Object;
 environnement.users = []; //new Array();
+environnement.key = 0; //TODO session key
+environnement.actif = {}; //TODO new User(...);
+environnement.pwitts = []; //TODO new Array(); of Pwitt
 
 /* Object User */
 

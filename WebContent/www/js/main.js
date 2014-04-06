@@ -1,5 +1,7 @@
-function main()
-{
+$(function() {
+	
 	RechercheCommentaires.traiterReponseJSON(envoiCommentaires());
-	return true;
-}
+
+});
+
+

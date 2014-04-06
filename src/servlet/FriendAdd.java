@@ -8,20 +8,26 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONException;
 
-public class LogoutUser extends HttpServlet{
+public class FriendAdd extends HttpServlet{
 	
-	//http://li328.lip6.fr:8280/CADENE_PANOU/users/logout?sessionKey=
-	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	@Override
 	protected void doGet (HttpServletRequest req, HttpServletResponse resp) throws IOException{
 		
 		resp.setContentType("plain/text");
 		
-		if(req.getParameterMap().containsKey("session")) {
+		if(req.getParameterMap().containsKey("session") &&
+		   req.getParameterMap().containsKey("friend_id")) {
 		
-			String sessionKey =  req.getParameter("session");
+			String session =  req.getParameter("session");
+			int friend_id = Integer.parseInt(req.getParameter("friend_id"));
 		
 			try {
-				resp.getWriter().println(services.User.logout(sessionKey).toString());
+				resp.getWriter().println(services.Friend.add(session,friend_id).toString());
 			} catch (JSONException e) {
 				resp.getWriter().println(ServletTools.JSONError());
 			}

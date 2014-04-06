@@ -3,84 +3,75 @@
 
 
     <servlet>
-        <servlet-name>LoginUser</servlet-name>
-        <servlet-class>servlet.LoginUser</servlet-class>
+        <servlet-name>UserLogin</servlet-name>
+        <servlet-class>servlet.UserLogin</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>LoginUser</servlet-name>
+        <servlet-name>UserLogin</servlet-name>
         <url-pattern>/user/login</url-pattern>
     </servlet-mapping>
 
     <servlet>
-        <servlet-name>LogoutUser</servlet-name>
-        <servlet-class>servlet.LogoutUser</servlet-class>
+        <servlet-name>UserLogout</servlet-name>
+        <servlet-class>servlet.UserLogout</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>LogoutUser</servlet-name>
+        <servlet-name>UserLogout</servlet-name>
         <url-pattern>/user/logout</url-pattern>
     </servlet-mapping>
 
 	<servlet>
-        <servlet-name>RegisterUser</servlet-name>
-        <servlet-class>servlet.RegisterUser</servlet-class>
+        <servlet-name>UserRegister</servlet-name>
+        <servlet-class>servlet.UserRegister</servlet-class>
 	</servlet>
 	<servlet-mapping>
-        <servlet-name>RegisterUser</servlet-name>
+        <servlet-name>UserRegister</servlet-name>
         <url-pattern>/user/register</url-pattern>
     </servlet-mapping>
 
     <servlet>
-        <servlet-name>AddPwitt</servlet-name>
-        <servlet-class>servlet.AddPwitt</servlet-class>
+        <servlet-name>PwittAdd</servlet-name>
+        <servlet-class>servlet.PwittAdd</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>AddPwitt</servlet-name>
+        <servlet-name>PwittAdd</servlet-name>
         <url-pattern>/pwitt/add</url-pattern>
     </servlet-mapping>
     
     <servlet>
-        <servlet-name>FindPwitt</servlet-name>
-        <servlet-class>servlet.FindPwitt</servlet-class>
+        <servlet-name>PwittsFind</servlet-name>
+        <servlet-class>servlet.PwittsFind</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>FindPwitt</servlet-name>
+        <servlet-name>PwittsFind</servlet-name>
         <url-pattern>/pwitt/find</url-pattern>
     </servlet-mapping>
 
     <servlet>
-        <servlet-name>AddFriend</servlet-name>
-        <servlet-class>servlet.AddFriend</servlet-class>
+        <servlet-name>FriendAdd</servlet-name>
+        <servlet-class>servlet.FriendAdd</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>AddFriend</servlet-name>
+        <servlet-name>FriendAdd</servlet-name>
         <url-pattern>/friend/add</url-pattern>
-    </servlet-mapping>
-
-	<servlet>
-        <servlet-name>AddFollower</servlet-name>
-        <servlet-class>servlet.AddFollower</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>AddFollower</servlet-name>
-        <url-pattern>/follower/add</url-pattern>
     </servlet-mapping>
       
     <servlet>
-        <servlet-name>RemoveFriend</servlet-name>
-        <servlet-class>servlet.RemoveFriend</servlet-class>
+        <servlet-name>FriendRemove</servlet-name>
+        <servlet-class>servlet.FriendRemove</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>RemoveFriend</servlet-name>
+        <servlet-name>FriendRemove</servlet-name>
         <url-pattern>/friend/remove</url-pattern>
     </servlet-mapping>
     
     <servlet>
-        <servlet-name>MapReduce</servlet-name>
-        <servlet-class>servlet.MapReduce</servlet-class>
+        <servlet-name>WordsMR</servlet-name>
+        <servlet-class>servlet.WordsMR</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>MapReduce</servlet-name>
-        <url-pattern>/server/mapreduce</url-pattern>
+        <servlet-name>WordsMR</servlet-name>
+        <url-pattern>/server/words/mapreduce</url-pattern>
     </servlet-mapping>
     
  </web-app>

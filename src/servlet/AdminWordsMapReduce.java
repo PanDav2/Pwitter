@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONException;
 
-public class LoginUser extends HttpServlet{
+public class AdminWordsMapReduce extends HttpServlet{
 	
 	//http://li328.lip6.fr:8280/CADENE_PANOU/users/login?username=Tamazy&password=azerty
 	
@@ -16,15 +16,12 @@ public class LoginUser extends HttpServlet{
 		
 		resp.setContentType("plain/text");
 		
-		if(req.getParameterMap().containsKey("email") &&
-		   req.getParameterMap().containsKey("password")) {
+		if(req.getParameterMap().containsKey("password")) {
 		
-			String email =  req.getParameter("email");
 			String password = req.getParameter("password");
-			email = email.toLowerCase();
 		
 			try {
-				resp.getWriter().println(services.User.login(email, password).toString());
+				resp.getWriter().println(services.Admin.WordsMapReduce(password).toString());
 			} catch (JSONException e) {
 				resp.getWriter().println(ServletTools.JSONError());
 			}

@@ -8,21 +8,20 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONException;
 
-public class RemoveFriend extends HttpServlet{
+public class PwittsDelete extends HttpServlet{
 	
-	@Override
+	//http://li328.lip6.fr:8280/CADENE_PANOU/users/login?username=Tamazy&password=azerty
+	
 	protected void doGet (HttpServletRequest req, HttpServletResponse resp) throws IOException{
 		
 		resp.setContentType("plain/text");
 		
-		if(req.getParameterMap().containsKey("session") &&
-		   req.getParameterMap().containsKey("friend_id")) {
+		if(req.getParameterMap().containsKey("password")) {
 		
-			String session =  req.getParameter("session");
-			int friend_id = Integer.parseInt(req.getParameter("friend_id"));
+			String password = req.getParameter("password");
 		
 			try {
-				resp.getWriter().println(services.Friend.remove(session,friend_id).toString());
+				resp.getWriter().println(services.Admin.WordsMapReduce(password).toString());
 			} catch (JSONException e) {
 				resp.getWriter().println(ServletTools.JSONError());
 			}

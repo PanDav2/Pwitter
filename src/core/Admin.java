@@ -8,6 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.PreparedStatement;
+import java.util.ArrayList;
 
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -21,9 +22,9 @@ import tools.MySQLDB;
 import tools.Sha1;
 import tools.Time;
 
-public class Server {
+public class Admin {
 	
-	static public String mapReduce(String password) throws CoreException
+	static public ArrayList<String> wordsMapReduce(String password) throws CoreException
 	{
 
 		if(password.compareTo("admin") != 0)
@@ -46,11 +47,6 @@ public class Server {
 							"}" +
 						"}";
 			
-			/*m = "function() { " +
-					"var word = this.content; " +
-					"emit(word,1); " +
-				"}";*/
-			
 			String r = "function(key,values) { " +
 							"total = 0; " +
 							"for(var i in values) { " +
@@ -62,11 +58,13 @@ public class Server {
 			MapReduceCommand cmd = new MapReduceCommand(coll,m,r,null,
 					MapReduceCommand.OutputType.INLINE,null);
 			MapReduceOutput out = coll.mapReduce(cmd);
-			String s = "";
+			
+			ArrayList<String> words = new ArrayList<String>();
+			
 			for(DBObject obj : out.results()){
-				s += obj.toString() + "  ";
+				words.add(obj.toString());
 			}
-			return s;
+			return words;
 		} catch (UnknownHostException e) {
 			throw new CoreException(e.getMessage(),12);
 		} catch (MongoException e) {
@@ -74,6 +72,9 @@ public class Server {
 		}
 	}
 
+	static public void deletePwitts(){
+		//TODO 
+	}
 	
 
 	

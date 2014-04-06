@@ -10,10 +10,10 @@ import core.CoreException;
 
 public class Pwitt {
 
-	static public JSONObject add(String session, String title, String content) throws JSONException{
+	static public JSONObject add(String session, String content) throws JSONException{
 		try
 		{
-			core.Pwitt.add(session,title,content);
+			core.Pwitt.add(session,content);
 			JSONObject json = new JSONObject();
 			json.put("statut", "ok");
 			return json;
@@ -47,10 +47,7 @@ public class Pwitt {
 			if(words != "")
 				json.put("words", words);
 			
-			JSONArray list = new JSONArray();
-			for(String pwitt : pwitts)
-				 list.put(new JSONObject(pwitt));
-			json.put("pwitts", list);
+			json.put("pwitts", new JSONArray(pwitts));
 			
 			return json;
 		}

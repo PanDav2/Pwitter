@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONException;
 
-public class FindPwitt extends HttpServlet{
+public class PwittsFind extends HttpServlet{
 	
 	@Override
 	protected void doGet (HttpServletRequest req, HttpServletResponse resp) throws IOException{
