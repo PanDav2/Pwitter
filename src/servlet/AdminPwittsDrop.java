@@ -8,21 +8,18 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONException;
 
-public class PwittAdd extends HttpServlet{
+public class AdminPwittsDrop extends HttpServlet{
 	
-	@Override
 	protected void doGet (HttpServletRequest req, HttpServletResponse resp) throws IOException{
 		
 		resp.setContentType("plain/text");
 		
-		if(req.getParameterMap().containsKey("session") &&
-		   req.getParameterMap().containsKey("content")) {
-			
-			String session = req.getParameter("session");
-			String content = req.getParameter("content");
-			
+		if(req.getParameterMap().containsKey("password")) {
+		
+			String password = req.getParameter("password");
+		
 			try {
-				resp.getWriter().println(services.Pwitt.add(session,content).toString());
+				resp.getWriter().println(services.Admin.pwittsDrop(password).toString());
 			} catch (JSONException e) {
 				resp.getWriter().println(ServletTools.JSONError());
 			}
@@ -30,7 +27,6 @@ public class PwittAdd extends HttpServlet{
 		} else {
 				resp.getWriter().println(ServletTools.ArgError());
 		}
-	
 	
 	}
 	

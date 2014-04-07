@@ -4,9 +4,9 @@
 	
 state = {}; //new Object;
 state.users = []; //new Array();
-state.session = 0; //TODO session key
-state.id = 1; //TODO my id
-state.currentUser = {}; //TODO new User(...);
+state.myProfil = {}; //TODO new myProfil
+state.session;
+state.currentUser = {}; //TODO new CurrentUser
 state.pwittsFind = {}; //TODO new PwittsFind(...);
 
 /* Object User */
@@ -41,7 +41,7 @@ User.prototype.changeFriendship = function()
 function Pwitt(id, user, content, date, score)
 {
 	this.id = id;
-	this.user = user;
+	this.user_id = user.id;
 	this.content = content;
 	this.date = date;
 	this.score = score; //undefined
@@ -50,14 +50,34 @@ function Pwitt(id, user, content, date, score)
 Pwitt.prototype.getHtml = function()
 {
 	return "<div id=\"Pwitt_" + this.id + "\">\n"
-		+ "<h2>" + this.user.firstName + this.user.lastName + "<small> :: " + this.user.mail + " :: " + this.date + "</small></h2>\n"
+		+ "<h2>" + this.user.firstName + " " + this.user.lastName + "<small> :: " + this.user.email + " :: " + formatDate(this.date) + "</small></h2>\n"
 		+ "<p>" + this.content + "</p>\n"
 		+ "</div>";
 };
 
+/* Object PwittSend */
+
+function PwittSend(){
+	
+}
+// TODO finir
+PwittSend.prototype.ajax = function (){
+	$.ajax({
+		type:"GET",
+		url:"http://li328.lip6.fr/CADENE_PANOU/PwittSend",
+		data:"session="+state.session+"&content="+content,
+		datatype:"json",
+		success: PwittSend.onSuccess(response),
+		error: function(error){
+			throwError(error);
+		}
+	});
+};
+
+
 /* Object PwittsFind */
 
-function PwittsFind(pwitts, author, date, words, doFriends)
+function PwittsFind(pwitts, user, date, words, doFriends)
 {
 	this.pwitts = pwitts;
 	
@@ -71,14 +91,14 @@ function PwittsFind(pwitts, author, date, words, doFriends)
 		this.doFriends = false;
 	}
 
-	this.author = author; //undefined par défaut
+	this.user_id = user.id;
 
 	this.date = date;
 	if(date == undefined){
 		this.date = new Date();
 	}
 
-	state.pwitts = this;	
+	state.pwittsFind = this;	
 }
 
 PwittsFind.prototype.getHtml = function()
@@ -96,7 +116,7 @@ PwittsFind.reviver = function(key,value)
 	if(key == ''){
 		return new PwittsFind(
 			value.pwitts, value.words, value.doFriends,
-			value.author, value.date
+			value.user, value.date
 		);
 	}
 	if(key == 'pwitts'){
@@ -112,13 +132,27 @@ PwittsFind.reviver = function(key,value)
 		}	
 		return tab;
 	}
-	if(key == 'author'){
-		return new User(value.id, value.email, value.firstName, value.lastName, value.isFriend);
+	if(key == 'user_id'){
+		return value;//new User(value.id, value.email, value.firstName, value.lastName, value.isFriend);
 	}
 	if(key == 'date'){
 		return new Date(value);
 	}
 	return value;
+};
+
+PwittsFind.ajax = function()
+{
+	$.ajax({
+		type:"GET",
+		url:"http://li328.lip6.fr/CADENE_PANOU/PwittsFind",
+		//data:"session="+state.session+"&content="+content,
+		datatype:"json",
+		success: PwittsFind.onSuccess(response),
+		error: function(error){
+			throwError(error);
+		}
+	});
 };
 
 PwittsFind.onSuccess = function(response)
@@ -261,23 +295,66 @@ UserLogout.prototype.onSuccess = function(response){
 	state.actif = undefined;
 };
 
-	
-/* Function EnvoiCommentaires */
+/* Object CurrentUser */
 
-function envoiCommentaires()
-{
-	var user1 = new User(1,"Jean",true);
-	var user2 = new User(2,"Jeanne",false);
-	var user3 = new User(3,"Roger",false);
-	var com1 = new Commentaire(23,user2,"Texte texte texte",new Date(), 45);
-	var com2 = new Commentaire(22,user1,"Texte texte texte",new Date(), 40);
-	var tab = [com1,com2];
-	var reco = new PwittsFind(tab,"nimp", false, user3);
-	return (JSON.stringify(reco));
+function CurrentUser(){
+	
 }
 
+/*
+CurrentUser.change = function()
+{
+	$.ajax({
+		type:"GET",
+		url:"http://li328.lip6.fr/CADENE_PANOU/UserLogout",
+		data:"session="+state.session,
+		datatype:"json",
+		success: UserLogout.onSuccess(response),
+		error: function(error){
+			throwError(error);
+		}
+	});
+};
+*/
 
-/* Function throwError */
+/* Object MyProfil */
+
+function MyProfil(session){
+	this.session = session;
+	this.id = null;
+}
+
+MyProfil.ajax = function (){
+	$.ajax({
+		type:"GET",
+		url:"http://li328.lip6.fr/CADENE_PANOU/UserLogin",
+		data:"session="+this.session,
+		datatype:"json",
+		success: MyProfil.onSuccess(response),
+		error: function(error){
+			throwError(error);
+		}
+	});
+}
+
+/*
+CurrentUser.change = function()
+{
+	$.ajax({
+		type:"GET",
+		url:"http://li328.lip6.fr/CADENE_PANOU/UserLogout",
+		data:"session="+state.session,
+		datatype:"json",
+		success: UserLogout.onSuccess(response),
+		error: function(error){
+			throwError(error);
+		}
+	});
+};
+*/
+
+	
+/** FUNCTIONS **/
 
 //TODO améliorer
 function throwError(error) {
@@ -286,8 +363,49 @@ function throwError(error) {
 	return true;
 }
 
+function verifySession()
+{
+	console.log(getQueryString("session"));
+}
 
+function getQueryString(key, default_) {
+    if (default_==null) default_="";
+    key = key.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
+    var regex = new RegExp("[\\?&]"+key+"=([^&#]*)");
+    var qs = regex.exec(window.location.href);
+    if(qs == null) return default_; else return qs[1];
+}
 
+function formatDate(date){
+	diff = dateDiff(date, new Date());
+	if(diff.day != 0)
+		return diff.day + " day(s)";
+	if(diff.hour != 0)
+		return diff.hour + " hour(s)";
+	if(diff.min != 0)
+		return diff.min + " min(s)";
+	return diff.sec + " sec(s)";
+}
 
+function dateDiff(date1, date2){
+    var diff = {};                          // Initialisation du retour
+    var tmp = date2.valueOf() - date1.valueOf();
+    
+    console.log(date2 + "-" + date1 + "=" + tmp);
+ 
+    tmp = Math.floor(tmp/1000);             // Nombre de secondes entre les 2 dates
+    diff.sec = tmp % 60;                    // Extraction du nombre de secondes
+ 
+    tmp = Math.floor((tmp-diff.sec)/60);    // Nombre de minutes (partie entière)
+    diff.min = tmp % 60;                    // Extraction du nombre de minutes
+ 
+    tmp = Math.floor((tmp-diff.min)/60);    // Nombre d'heures (entières)
+    diff.hour = tmp % 24;                   // Extraction du nombre d'heures
+     
+    tmp = Math.floor((tmp-diff.hour)/24);   // Nombre de jours restants
+    diff.day = tmp;
+     
+    return diff;
+}
 
 

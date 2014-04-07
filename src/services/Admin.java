@@ -15,12 +15,16 @@ public class Admin {
 		try
 		{
 			ArrayList<String> words = core.Admin.wordsMapReduce(password);
+			ArrayList<JSONObject> JSONWords = new ArrayList<JSONObject>();
 			
 			JSONObject json = new JSONObject();
 			
 			json.put("statut", "ok");
 			
-			json.put("words",  new JSONArray(words));
+			for(String word : words){
+				JSONWords.add(new JSONObject(word));
+			}
+			json.put("words",  new JSONArray(JSONWords));
 			
 			return json;
 		}
@@ -30,10 +34,10 @@ public class Admin {
 		}
 	}
 
-	public static Object PwittsDelete(String password) throws JSONException {
+	public static Object pwittsDrop(String password) throws JSONException {
 		try
 		{
-			 core.Admin.pwittsDelete(password);
+			core.Admin.pwittsDrop(password);
 			
 			JSONObject json = new JSONObject();
 			

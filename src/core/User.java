@@ -132,7 +132,7 @@ public class User {
 		
 	}
 	
-	public static String getEmail(String session) throws CoreException{
+	/*public static String getEmail(String session) throws CoreException{
 		
 		try
 		{
@@ -165,7 +165,7 @@ public class User {
 		} catch (SQLException e) {
 			throw new CoreException(e.getMessage(),10);
 		}
-	}
+	}*/
 	
 	public static int isAuthentified(String session) throws CoreException{
 		

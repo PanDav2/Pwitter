@@ -71,17 +71,28 @@ public class Admin {
 		}
 	}
 
-	public static void pwittsDelete(String password) throws CoreException {
+	public static void pwittsDrop(String password) throws CoreException {
 		
 		_isAdmin(password);
 		
-		//TODO delete Pwitts collection from mongodb
+		try {
+			
+			DB db;
+			db = MongoDB.getConnection();
+			DBCollection coll = db. getCollection ("Pwitts");
+			coll.drop();
+		} catch (UnknownHostException e) {
+			throw new CoreException(e.getMessage(),12);
+		} catch (MongoException e) {
+			throw new CoreException(e.getMessage(),12);
+		}
+		
 		
 	}
 	
 	
 	private static boolean _isAdmin(String password) throws CoreException{
-		if (password != "admin")
+		if (!password.equals("admin"))
 			throw new CoreException(2001);
 		return true;
 	}

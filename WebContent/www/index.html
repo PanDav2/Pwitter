@@ -4,7 +4,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <title>Pwitter</title>
   <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
-  <link rel="stylesheet" type="text/css" href="css/style.css" />
+  <!--  <link rel="stylesheet" type="text/css" href="css/style.css" /> -->
 </head>
 <body>
 
@@ -17,7 +17,7 @@
     	<div id="search-area">
     		<h1>. : P w i t t e r : .</h1>
     		<form action="search.html">
-    		    <input type="text" name="friendsFind" placeholder="Searching for a friend ?<"/>
+    		    <input type="text" name="friendsFind" placeholder="Searching for a friend ?"/>
         		<input class="display-none" type="submit" name="submit" value="Envoyer" />
       		</form>
     	</div>
@@ -73,29 +73,27 @@
       
       		<div class="maincol">
 		      	<h1 style="text-align:center;margin-bottom:15px;">Liste des Pwitts</h1>
-		        <form action="pwitt.html">
+		        <form id="form-PwittSend" action="pwitt.html">
 		          <input type="text" name="new-pwitt" placeholder="Envoyer un Pwitt à tous vos amis !"/>
 		          <input class="display-none" type="submit" name="submit" value="Envoyer" />
 		        </form>
 		    </div>
       		<div class="maincol_bottom"></div>
 
+			<input id="button-PwittsFind" class="display-none" type="submit" name="submit" value="Update PwittsList" />
+
 		 	<div id="pwitts">
 	      
 				<div class="maincol">          
-				<h2>Remi Cadene <small>@RemiCadene : 11 mins</small></h2>
-				<p>Je m'appelle Rémi et je suis sans famille ^.^ #Enfant2coeur</p>
+					<h2>Remi Cadene <small>@RemiCadene : 11 mins</small></h2>
+					<p>Je m'appelle Rémi et je suis sans famille ^.^ #Enfant2coeur</p>
 				</div>
 				<div class="maincol_bottom"></div>
 				
 				<div class="maincol">   
-				<h2>David Panou <small>@DavidPanou : 11 mins</small></h2>
-				<p>Commémorons mes frères, le jour où l'Homme, après de longues et sanglantes nuits blanches, triompha du css #LOL</p>
-				<p>&nbsp;</p>
-				
-				<h2>David Panou <small>@DavidPanou : 12 mins</small></h2>
-				<p>Ceci est un double Twitt, je ne sais pas à quoi ça peut servir pour l'instant #useless</p>
-				<p>&nbsp;</p>
+					<h2>David Panou <small>@DavidPanou : 11 mins</small></h2>
+					<p>Commémorons mes frères, le jour où l'Homme, après de longues et sanglantes nuits blanches, triompha du css #LOL</p>
+					<p>&nbsp;</p>
 				</div>
 				<div class="maincol_bottom"></div>
 	
@@ -106,8 +104,9 @@
       	<div class="clear"></div>
       
       	<div id="footer"><a href="http://github.com/Tamazy/Pwitter">Powered for Pwitter 2014</a></div>
-
+		
 	</div> <!-- #container End -->
+
   
 </div>
 

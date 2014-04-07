@@ -10,10 +10,10 @@ import core.CoreException;
 
 public class Pwitt {
 
-	static public JSONObject add(String session, String content) throws JSONException{
+	static public JSONObject send(String session, String content) throws JSONException{
 		try
 		{
-			core.Pwitt.add(session,content);
+			core.Pwitt.send(session,content);
 			JSONObject json = new JSONObject();
 			json.put("statut", "ok");
 			return json;
@@ -28,6 +28,7 @@ public class Pwitt {
 		try
 		{
 			ArrayList<String> pwitts = core.Pwitt.find(session,words,dofriends);
+			ArrayList<JSONObject> JSONPwitts = new ArrayList<JSONObject>();
 			
 			JSONObject json = new JSONObject();
 			json.put("statut", "ok");
@@ -36,7 +37,7 @@ public class Pwitt {
 			
 			if(session != "")
 			{
-				json.put("author", core.User.getEmail(session));
+				json.put("user_id", core.User.isAuthentified(session));
 				
 				if(dofriends != "")
 					json.put("dofriends", 0);
@@ -47,7 +48,9 @@ public class Pwitt {
 			if(words != "")
 				json.put("words", words);
 			
-			json.put("pwitts", new JSONArray(pwitts));
+			for(String pwitt : pwitts)
+				JSONPwitts.add(new JSONObject(pwitt));
+			json.put("pwitts", new JSONArray(JSONPwitts));
 			
 			return json;
 		}

@@ -44,7 +44,7 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>PwittsFind</servlet-name>
-        <url-pattern>/pwitt/find</url-pattern>
+        <url-pattern>/pwitts/find</url-pattern>
     </servlet-mapping>
 
     <servlet>
@@ -66,12 +66,21 @@
     </servlet-mapping>
     
     <servlet>
-        <servlet-name>WordsMR</servlet-name>
-        <servlet-class>servlet.WordsMR</servlet-class>
+        <servlet-name>AdminWordsMapReduce</servlet-name>
+        <servlet-class>servlet.AdminWordsMapReduce</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>WordsMR</servlet-name>
-        <url-pattern>/server/words/mapreduce</url-pattern>
+        <servlet-name>AdminWordsMapReduce</servlet-name>
+        <url-pattern>/admin/words/mapreduce</url-pattern>
+    </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>AdminPwittsDrop</servlet-name>
+        <servlet-class>servlet.AdminPwittsDrop</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AdminPwittsDrop</servlet-name>
+        <url-pattern>/admin/pwitts/drop</url-pattern>
     </servlet-mapping>
     
  </web-app>

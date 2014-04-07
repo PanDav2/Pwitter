@@ -21,7 +21,7 @@ import tools.Time;
 
 public class Pwitt {
 
-	static public void add(String session,String content) throws CoreException
+	static public void send(String session,String content) throws CoreException
 	{
 		try {
 			/* recover user info */ 
