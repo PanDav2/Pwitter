@@ -21,7 +21,7 @@ public class AdminWordsMapReduce extends HttpServlet{
 			String password = req.getParameter("password");
 		
 			try {
-				resp.getWriter().println(services.Admin.WordsMapReduce(password).toString());
+				resp.getWriter().println(services.Admin.wordsMapReduce(password).toString());
 			} catch (JSONException e) {
 				resp.getWriter().println(ServletTools.JSONError());
 			}

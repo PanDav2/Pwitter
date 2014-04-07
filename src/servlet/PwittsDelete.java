@@ -10,8 +10,6 @@ import org.json.JSONException;
 
 public class PwittsDelete extends HttpServlet{
 	
-	//http://li328.lip6.fr:8280/CADENE_PANOU/users/login?username=Tamazy&password=azerty
-	
 	protected void doGet (HttpServletRequest req, HttpServletResponse resp) throws IOException{
 		
 		resp.setContentType("plain/text");
@@ -21,7 +19,7 @@ public class PwittsDelete extends HttpServlet{
 			String password = req.getParameter("password");
 		
 			try {
-				resp.getWriter().println(services.Admin.WordsMapReduce(password).toString());
+				resp.getWriter().println(services.Admin.PwittsDelete(password).toString());
 			} catch (JSONException e) {
 				resp.getWriter().println(ServletTools.JSONError());
 			}

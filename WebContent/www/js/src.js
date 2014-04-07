@@ -1,176 +1,265 @@
+/** OBJECTS DECLARATIONS **/
+
 /* Object Static Environnement */
 	
-environnement = {}; //new Object;
-environnement.users = []; //new Array();
-environnement.key = 0; //TODO session key
-environnement.actif = {}; //TODO new User(...);
-environnement.pwitts = []; //TODO new Array(); of Pwitt
+state = {}; //new Object;
+state.users = []; //new Array();
+state.session = 0; //TODO session key
+state.id = 1; //TODO my id
+state.currentUser = {}; //TODO new User(...);
+state.pwittsFind = {}; //TODO new PwittsFind(...);
 
 /* Object User */
 
-function User(id, login, contact)
+function User(id, email, firstName, lastName, isFriend)
 {
 	this.id = id;
-	this.login = login;
-	this.contact = false;
-	if(contact != undefined){
-		this.contact = contact;
+	this.email = email;
+	this.firstName = firstName;
+	this.lastName = lastName;
+	this.isFriend = false;
+	if(isFriend != undefined){
+		this.isFriend = isFriend;
 	}
 
-	if(environnement == undefined){
-		environnement = {};
+	if(state == undefined){
+		state = {};
 	}
-	if(environnement.users == undefined){
-		environnement.users = [];
+	if(state.users == undefined){
+		state.users = [];
 	}
-	environnement.users[id] = this;
+	state.users[id] = this;
 }
 
-User.prototype.modifieStatus = function()
+User.prototype.changeFriendship = function()
 {
-	this.contact = !this.contact;
-}
+	this.isFriend = !this.isFriend;
+};
 
-/* Object Commentaire */
+/* Object Pwitt */
 
-function Commentaire(id, auteur, texte, date, score)
+function Pwitt(id, user, content, date, score)
 {
 	this.id = id;
-	this.auteur = auteur;
-	this.texte = texte;
+	this.user = user;
+	this.content = content;
 	this.date = date;
 	this.score = score; //undefined
-	
 }
 
-Commentaire.prototype.getHtml = function()
+Pwitt.prototype.getHtml = function()
 {
-	return "<div id=\"Commentaire_" + this.id + "\">\n"
-		+ "<h2>" + this.auteur.login + "<small> @" + this.auteur.login + " : " + this.date + "</small></h2>\n"
-		+ "<p>" + this.texte + "</p>\n"
+	return "<div id=\"Pwitt_" + this.id + "\">\n"
+		+ "<h2>" + this.user.firstName + this.user.lastName + "<small> :: " + this.user.mail + " :: " + this.date + "</small></h2>\n"
+		+ "<p>" + this.content + "</p>\n"
 		+ "</div>";
-}
+};
 
-/* Object RechercheCommentaires */
+/* Object PwittsFind */
 
-function RechercheCommentaires(resultats, recherche, contacts_only, auteur, date)
+function PwittsFind(pwitts, author, date, words, doFriends)
 {
-	this.resultats = resultats;
+	this.pwitts = pwitts;
 	
-	this.recherche = recherche;
-	if(recherche == undefined){
-		this.recherche = "";
+	this.words = words;
+	if(words == undefined){
+		this.words = "";
 	}
 
-	this.contacts_only = contacts_only;
-	if(contacts_only == undefined){
-		this.contacts_only = false;
+	this.doFriends = doFriends;
+	if(doFriends == undefined){
+		this.doFriends = false;
 	}
 
-	this.auteur = auteur; //undefined par défaut
+	this.author = author; //undefined par défaut
 
 	this.date = date;
 	if(date == undefined){
 		this.date = new Date();
 	}
 
-	environnement.recherche = this;	
+	state.pwitts = this;	
 }
 
-RechercheCommentaires.prototype.getHtml = function()
+PwittsFind.prototype.getHtml = function()
 {
 	var s = "<div class=\"maincol\">\n";
-	for(var i=0; i<this.resultats.length; i++){
-		s += this.resultats[i].getHtml()+"\n";
+	for(var i=0; i<this.pwitts.length; i++){
+		s += this.pwitts[i].getHtml()+"\n";
 	}
 	s += "</div>\n<div class=\"maincol_bottom\"></div";
 	return s;
-}
+};
 
-RechercheCommentaires.reviver = function(key,value)
+PwittsFind.reviver = function(key,value)
 {
 	if(key == ''){
-		return new RechercheCommentaires(
-			value.resultats, value.recherche, value.contacts_only,
-			value.auteur, value.date
+		return new PwittsFind(
+			value.pwitts, value.words, value.doFriends,
+			value.author, value.date
 		);
 	}
-	if(key == 'resultats'){
+	if(key == 'pwitts'){
 		var tab = [value.length];
 		for(var i=0;i<value.length;i++){
-			tab[i] = new Commentaire(
+			tab[i] = new Pwitt(
 				value[i].id,
-				value[i].auteur,
-				value[i].texte,
+				value[i].user,
+				value[i].content,
 				value[i].date,
 				value[i].score
 			);
 		}	
 		return tab;
 	}
-	if(key == 'auteur'){
-		return new User(value.id, value.login, value.contact);
+	if(key == 'author'){
+		return new User(value.id, value.email, value.firstName, value.lastName, value.isFriend);
 	}
 	if(key == 'date'){
 		return new Date(value);
 	}
 	return value;
-}
+};
 
-RechercheCommentaires.traiterReponseJSON = function(json_text)
+PwittsFind.onSuccess = function(response)
 {
-	//alert(json_text);
-	var obj = JSON.parse(json_text,RechercheCommentaires.reviver);
-	if(obj.erreur == undefined){
-		//alert(obj.getHtml());
-		$("#comments").prepend(obj.getHtml());
-	}else{
-		alert(obj.erreur);
+	var obj = JSON.parse(response,PwittsFind.reviver);
+	if(obj.error != undefined){
+		return throwError(obj.error);
 	}
-}
+	
+	$("#pwitts").prepend(obj.getHtml());
+};
 
+/* Object PwittAdd */
 
-/* Objet Follower */
-
-function Follower()
-{
+function PwittAdd() {
 	
 }
 
-// TODO modifier
-Follower.prototype.ajouter = function(id)
+PwittAdd.prototype.ajax = function(content)
 {
 	$.ajax({
 		type:"GET",
-		url:"http://li328.lip6.fr/CADENE_PANOU/addComment",
-		data:"key="+environnement.key+"&text="+text,
+		url:"http://li328.lip6.fr/CADENE_PANOU/PwittAdd",
+		data:"session="+state.session+"&content="+content,
 		datatype:"json",
-		success: Follower.traiterReponseJSON(reponse,id),
-		error: function(msg){alert(msg);}
-	});
-}
-
-// TODO modifier
-Follower.prototype.traiterAjouter = function(reponse,id)
-{
-	if((reponse.erreur != undefined) && (reponse.erreur != 0)){
-		alert(reponse.erreur);
-	}else{
-		var user = environnement.user[id];
-		user.modifierStatus();
-		var comments = environnement.recherche.resultats;
-		for(var i in comments){
-			if(comments[i].auteur.id == id){
-				$("#commentaire_"+comments[i].id).replacewith(comments[i].getHTML());
-			}
+		success: PwittAdd.onSuccess(response),
+		error: function(error){
+			throwError(error);
 		}
-	}
-}
+	});
+};
 
-Follower.prototype.supprimer = function()
+PwittAdd.prototype.onSuccess = function(response)
 {
+	if(response.error != undefined){
+		return throwError(error);
+	}
+	
+	$("form").prepend(box);
+};
+
+/* Object FriendAdd */
+
+function FriendAdd(){
 	
 }
+
+FriendAdd.prototype.ajax = function(friend_id)
+{
+	$.ajax({
+		type:"GET",
+		url:"http://li328.lip6.fr/CADENE_PANOU/FriendAdd",
+		data:"session="+state.session+"&friend_id="+friend_id,
+		datatype:"json",
+		success: FriendAdd.onSuccess(response,friend_id),
+		error: function(error){
+			throwError(error);
+		}
+	});
+};
+
+FriendAdd.prototype.onSuccess = function(response,friend_id)
+{
+	if(response.error != undefined){
+		return throwError(error);
+	}
+		
+	var user = state.users[id];
+	user.modifyFriendship();
+	var pwitts = state.pwittsFind.pwitts;
+	for(var i in pwitts){
+		// TODO
+		if(pwitts[i].user.id == friend_id){
+			$("#pwitt_"+pwitts[i].id).replacewith(pwitts[i].getHTML());
+		}
+	}
+	
+};
+
+
+/* Object FriendRemove */
+
+function FriendRemove(){
+	
+}
+
+FriendRemove.prototype.ajax = function(friend_id)
+{
+	$.ajax({
+		type:"GET",
+		url:"http://li328.lip6.fr/CADENE_PANOU/FriendRemove",
+		data:"session="+state.session+"&friend_id="+friend_id,
+		datatype:"json",
+		success: FriendRemove.onSuccess(response,friend_id),
+		error: function(error){
+			throwError(error);
+		}
+	});
+};
+
+// TODO
+FriendRemove.prototype.onSuccess = function()
+{
+	if(response.error != undefined){
+		return throwError(error);
+	}
+	var user = state.users[id];
+	user.modifyFriendship();
+	var pwitts = state.pwittsFind.pwitts;
+	for(var i in pwitts){
+		// TODO
+		if(pwitts[i].user.id == friend_id){
+			$("#pwitt_"+pwitts[i].id).replacewith(pwitts[i].getHTML());
+		}
+	}
+};
+
+/* Object UserLogout */
+
+function UserLogout(){
+	
+}
+
+UserLogout.prototype.ajax = function()
+{
+	$.ajax({
+		type:"GET",
+		url:"http://li328.lip6.fr/CADENE_PANOU/UserLogout",
+		data:"session="+state.session,
+		datatype:"json",
+		success: UserLogout.onSuccess(response),
+		error: function(error){
+			throwError(error);
+		}
+	});
+};
+
+
+UserLogout.prototype.onSuccess = function(response){
+	state.actif = undefined;
+};
 
 	
 /* Function EnvoiCommentaires */
@@ -183,30 +272,22 @@ function envoiCommentaires()
 	var com1 = new Commentaire(23,user2,"Texte texte texte",new Date(), 45);
 	var com2 = new Commentaire(22,user1,"Texte texte texte",new Date(), 40);
 	var tab = [com1,com2];
-	var reco = new RechercheCommentaires(tab,"nimp", false, user3);
+	var reco = new PwittsFind(tab,"nimp", false, user3);
 	return (JSON.stringify(reco));
 }
 
-/* Function SupFriend */
-
-function unFollow(id){
-
-}
 
 /* Function throwError */
 
-// TODO modifier
-function throwError(msg){
-	var box = "<div id=\"error\">" + msg + "</div>";
+//TODO améliorer
+function throwError(error) {
+	var box = "<div id=\"error\">["+error.code+"] "+error.msg+"</div>";
 	$("form").prepend(box);
+	return true;
 }
 
-/* Function disconnect */
 
-function disconnect(){
-	// TODO .actif ?
-	environnement.actif = undefined;
-	// TODO ajax gererDeconnexion		
-}
+
+
 
 

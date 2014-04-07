@@ -27,8 +27,7 @@ public class Admin {
 	static public ArrayList<String> wordsMapReduce(String password) throws CoreException
 	{
 
-		if(password.compareTo("admin") != 0)
-			throw new CoreException(2001);
+		_isAdmin(password);
 		
 		try {
 			
@@ -72,10 +71,20 @@ public class Admin {
 		}
 	}
 
-	static public void deletePwitts(){
-		//TODO 
+	public static void pwittsDelete(String password) throws CoreException {
+		
+		_isAdmin(password);
+		
+		//TODO delete Pwitts collection from mongodb
+		
 	}
 	
+	
+	private static boolean _isAdmin(String password) throws CoreException{
+		if (password != "admin")
+			throw new CoreException(2001);
+		return true;
+	}
 
 	
 }
