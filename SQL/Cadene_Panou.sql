@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Client: localhost
--- Généré le: Mer 02 Avril 2014 à 11:20
+-- Généré le: Mar 08 Avril 2014 à 17:01
 -- Version du serveur: 5.5.33-1-log
 -- Version de PHP: 5.5.8-3
 
@@ -130,29 +130,16 @@ CREATE TABLE IF NOT EXISTS `Images_Pwitts` (
 -- --------------------------------------------------------
 
 --
--- Structure de la table `MRDocs`
+-- Structure de la table `MRFreqs`
 --
 
-CREATE TABLE IF NOT EXISTS `MRDocs` (
-  `id` int(11) NOT NULL,
-  `content` text COLLATE utf8_bin NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
-
--- --------------------------------------------------------
-
---
--- Structure de la table `MRDocs_MRWords`
---
-
-CREATE TABLE IF NOT EXISTS `MRDocs_MRWords` (
+CREATE TABLE IF NOT EXISTS `MRFreqs` (
   `id` int(11) NOT NULL,
   `mrword_id` int(11) NOT NULL,
-  `mrdoc_id` int(11) NOT NULL,
-  `freq` int(11) NOT NULL,
+  `pwitt_id` int(11) NOT NULL,
+  `freq` float(8,7) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_MRDocs_MRWords_mrword_id` (`mrword_id`),
-  KEY `fk_MRDocs_MRWords_mrdoc_id` (`mrdoc_id`)
+  KEY `fk_MRDocs_MRWords_mrword_id` (`mrword_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- --------------------------------------------------------
@@ -164,8 +151,10 @@ CREATE TABLE IF NOT EXISTS `MRDocs_MRWords` (
 CREATE TABLE IF NOT EXISTS `MRWords` (
   `id` int(11) NOT NULL,
   `name` varchar(100) COLLATE utf8_bin NOT NULL,
-  `nbdocs` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
+  `nb_pwitts` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name_2` (`name`),
+  KEY `name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- --------------------------------------------------------
@@ -230,7 +219,7 @@ CREATE TABLE IF NOT EXISTS `Users` (
 --
 
 INSERT INTO `Users` (`id`, `password`, `firstname`, `lastname`, `email`, `isValid`, `created`, `lastUpdate`, `lastModify`, `image_id`, `session`, `lastLogin`) VALUES
-(12, 'philvirg', 'Remi', 'Cadene', 'remicadene@laposte.net', NULL, 1396392645, NULL, NULL, NULL, NULL, NULL),
+(12, 'philvirg', 'Remi', 'Cadene', 'remicadene@laposte.net', NULL, 1396392645, NULL, NULL, NULL, '3811dc74237c46ea41767ad8f3309bd45fd92628', 1396966767),
 (13, 'azerty', 'David', 'David', 'david@panou.fr', NULL, 1396393105, NULL, NULL, NULL, NULL, NULL),
 (14, 'azerty', 'Alex', 'Ndoye', 'Alex@Ndoye.fr', NULL, 1396393275, NULL, NULL, NULL, NULL, NULL);
 
@@ -279,11 +268,10 @@ ALTER TABLE `Images_Pwitts`
   ADD CONSTRAINT `fk_Images_Pwitts_Pwitts1` FOREIGN KEY (`pwitt_id`) REFERENCES `Pwitts` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
--- Contraintes pour la table `MRDocs_MRWords`
+-- Contraintes pour la table `MRFreqs`
 --
-ALTER TABLE `MRDocs_MRWords`
-  ADD CONSTRAINT `fk_MRDocs_MRWords_mrword` FOREIGN KEY (`mrword_id`) REFERENCES `MRWords` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `fk_MRDocs_MRWords_mrdoc` FOREIGN KEY (`mrdoc_id`) REFERENCES `MRDocs` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE `MRFreqs`
+  ADD CONSTRAINT `fk_MRDocs_MRWords_mrword` FOREIGN KEY (`mrword_id`) REFERENCES `MRWords` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Contraintes pour la table `Notifs`
