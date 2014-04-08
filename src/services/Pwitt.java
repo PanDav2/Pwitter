@@ -33,7 +33,7 @@ public class Pwitt {
 			JSONObject json = new JSONObject();
 			json.put("statut", "ok");
 			
-			json.put("date", tools.Time.getCurrentTimestamp());
+			json.put("date", tools.Time.getCurrentTimeUnix());
 			
 			if(session != "")
 			{

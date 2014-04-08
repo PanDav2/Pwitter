@@ -1,12 +1,22 @@
 $(function() {
 	
-	verifySession();
+	var session = getQueryString("session");
 	
-	//TODO loadClient
+	if(session === undefined)
+		window.location = "connection.html";
+	
+	MyProfil.ajax(session);
+	
+	
+	
+	//PwittsFind.ajax();
 	
 	//PwittsFind.onSuccess(JSONPwittsTest());
 	
 	$("#form-PwittSend").submit(function(){
+		var content = $("#input-PwittSend").val();
+		if(content != "")
+			PwittSend.ajax(content);
 		return false;
 	});
 	

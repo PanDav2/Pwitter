@@ -28,7 +28,7 @@ public class Pwitt {
 			
 			Connection con = MySQLDB.getConnection();
 		    
-		    String sql = "SELECT id, firstname, lastname, email, lastLogin "
+		    String sql = "SELECT id, firstName, lastName, email, lastLogin "
 		    		   + "FROM Cadene_Panou.Users "
 		    		   + "WHERE session = ? LIMIT 1;";
 			PreparedStatement ps = con.prepareStatement(sql);
@@ -37,8 +37,8 @@ public class Pwitt {
 			if(!rset.next())
 				throw new CoreException(9);
 			int id = rset.getInt(1);
-			String firstname = rset.getString(2);
-			String lastname = rset.getString(3);
+			String firstName = rset.getString(2);
+			String lastName = rset.getString(3);
 			String email = rset.getString(4);
 			int lastLogin = rset.getInt(5);
 			
@@ -53,8 +53,8 @@ public class Pwitt {
 			DBCollection coll = db. getCollection ("Pwitts");
 			BasicDBObject user = new BasicDBObject();
 			user.put("id", id);
-			user.put("firstname", firstname);
-			user.put("lastname", lastname);
+			user.put("firstName", firstName);
+			user.put("lastName", lastName);
 			user.put("email", email);
 			BasicDBObject geodata = new BasicDBObject();
 			geodata.put("latitude", 0);
@@ -63,7 +63,7 @@ public class Pwitt {
 			BasicDBObject doc = new BasicDBObject();
 			doc.put("user",user);
 			doc.put("content",content);
-			doc.put("date",Time.getCurrentTimeUnix());
+			doc.put("date",tools.Time.getCurrentTimeUnix());
 			coll.insert(doc);
 			
 			

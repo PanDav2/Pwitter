@@ -5,8 +5,7 @@
 state = {}; //new Object;
 state.users = []; //new Array();
 state.myProfil = {}; //TODO new myProfil
-state.session;
-state.currentUser = {}; //TODO new CurrentUser
+state.currentUser_id = null; //TODO new CurrentUser
 state.pwittsFind = {}; //TODO new PwittsFind(...);
 
 /* Object User */
@@ -18,14 +17,14 @@ function User(id, email, firstName, lastName, isFriend)
 	this.firstName = firstName;
 	this.lastName = lastName;
 	this.isFriend = false;
-	if(isFriend != undefined){
+	if(isFriend !== undefined){
 		this.isFriend = isFriend;
 	}
 
-	if(state == undefined){
+	if(state === undefined){
 		state = {};
 	}
-	if(state.users == undefined){
+	if(state.users === undefined){
 		state.users = [];
 	}
 	state.users[id] = this;
@@ -41,60 +40,42 @@ User.prototype.changeFriendship = function()
 function Pwitt(id, user, content, date, score)
 {
 	this.id = id;
-	this.user_id = user.id;
+	this.user = user;
 	this.content = content;
 	this.date = date;
-	this.score = score; //undefined
+	if(score !== undefined)
+		this.score = score; //undefined
 }
 
 Pwitt.prototype.getHtml = function()
 {
-	return "<div id=\"Pwitt_" + this.id + "\">\n"
+	var html = "<div id=\"Pwitt_" + this.id + "\">\n"
 		+ "<h2>" + this.user.firstName + " " + this.user.lastName + "<small> :: " + this.user.email + " :: " + formatDate(this.date) + "</small></h2>\n"
 		+ "<p>" + this.content + "</p>\n"
 		+ "</div>";
+	return html;
 };
-
-/* Object PwittSend */
-
-function PwittSend(){
-	
-}
-// TODO finir
-PwittSend.prototype.ajax = function (){
-	$.ajax({
-		type:"GET",
-		url:"http://li328.lip6.fr/CADENE_PANOU/PwittSend",
-		data:"session="+state.session+"&content="+content,
-		datatype:"json",
-		success: PwittSend.onSuccess(response),
-		error: function(error){
-			throwError(error);
-		}
-	});
-};
-
 
 /* Object PwittsFind */
 
-function PwittsFind(pwitts, user, date, words, doFriends)
+function PwittsFind(pwitts, user_id, date, words, doFriends)
 {
 	this.pwitts = pwitts;
 	
 	this.words = words;
-	if(words == undefined){
+	if(words === undefined){
 		this.words = "";
 	}
 
 	this.doFriends = doFriends;
-	if(doFriends == undefined){
+	if(doFriends === undefined){
 		this.doFriends = false;
 	}
 
-	this.user_id = user.id;
+	this.user_id = user_id;
 
 	this.date = date;
-	if(date == undefined){
+	if(date === undefined){
 		this.date = new Date();
 	}
 
@@ -104,7 +85,7 @@ function PwittsFind(pwitts, user, date, words, doFriends)
 PwittsFind.prototype.getHtml = function()
 {
 	var s = "<div class=\"maincol\">\n";
-	for(var i=0; i<this.pwitts.length; i++){
+	for(var i=this.pwitts.length-1; i>=0; i--){
 		s += this.pwitts[i].getHtml()+"\n";
 	}
 	s += "</div>\n<div class=\"maincol_bottom\"></div";
@@ -115,8 +96,7 @@ PwittsFind.reviver = function(key,value)
 {
 	if(key == ''){
 		return new PwittsFind(
-			value.pwitts, value.words, value.doFriends,
-			value.user, value.date
+			value.pwitts, value.user_id,  value.date, value.words, value.doFriends
 		);
 	}
 	if(key == 'pwitts'){
@@ -129,14 +109,15 @@ PwittsFind.reviver = function(key,value)
 				value[i].date,
 				value[i].score
 			);
-		}	
+		}
+		console.log(tab);
 		return tab;
 	}
-	if(key == 'user_id'){
-		return value;//new User(value.id, value.email, value.firstName, value.lastName, value.isFriend);
+	if(key == 'user'){
+		return new User(value.id, value.email, value.firstName, value.lastName, value.isFriend);
 	}
 	if(key == 'date'){
-		return new Date(value);
+		return new Date(value*1000);
 	}
 	return value;
 };
@@ -145,10 +126,12 @@ PwittsFind.ajax = function()
 {
 	$.ajax({
 		type:"GET",
-		url:"http://li328.lip6.fr/CADENE_PANOU/PwittsFind",
+		url:"http://li328.lip6.fr:8280/CADENE_PANOU/pwitts/find",
 		//data:"session="+state.session+"&content="+content,
 		datatype:"json",
-		success: PwittsFind.onSuccess(response),
+		success: function(response){
+			PwittsFind.onSuccess(response);
+		},
 		error: function(error){
 			throwError(error);
 		}
@@ -158,53 +141,56 @@ PwittsFind.ajax = function()
 PwittsFind.onSuccess = function(response)
 {
 	var obj = JSON.parse(response,PwittsFind.reviver);
-	if(obj.error != undefined){
+	if(obj.error !== undefined){
 		return throwError(obj.error);
 	}
-	
+	state.pwittsFind = obj;
+	console.log(obj);
 	$("#pwitts").prepend(obj.getHtml());
 };
 
-/* Object PwittAdd */
+/* Object PwittSend */
 
-function PwittAdd() {
-	
-}
+function PwittSend(){};
 
-PwittAdd.prototype.ajax = function(content)
+PwittSend.ajax = function(content)
 {
 	$.ajax({
 		type:"GET",
-		url:"http://li328.lip6.fr/CADENE_PANOU/PwittAdd",
-		data:"session="+state.session+"&content="+content,
+		url:"http://li328.lip6.fr:8280/CADENE_PANOU/pwitt/send",
+		data:"session="+state.myProfil.session+"&content="+content,
 		datatype:"json",
-		success: PwittAdd.onSuccess(response),
+		success: function(response){
+			PwittSend.onSuccess(response,content);
+		},
 		error: function(error){
 			throwError(error);
 		}
 	});
 };
-
-PwittAdd.prototype.onSuccess = function(response)
+//TODO need reviver
+PwittSend.onSuccess = function(response,content)
 {
-	if(response.error != undefined){
-		return throwError(error);
+	var obj = JSON.parse(response);
+	if(obj.error !== undefined){
+		return throwError(obj.error);
 	}
 	
-	$("form").prepend(box);
+	var html = "<div>" +content+ "</div>";
+	
+	$("form").prepend(html);
 };
+
 
 /* Object FriendAdd */
 
-function FriendAdd(){
-	
-}
+function FriendAdd(){};
 
-FriendAdd.prototype.ajax = function(friend_id)
+FriendAdd.ajax = function(friend_id)
 {
 	$.ajax({
 		type:"GET",
-		url:"http://li328.lip6.fr/CADENE_PANOU/FriendAdd",
+		url:"http://li328.lip6.fr:8280/CADENE_PANOU/friend/add",
 		data:"session="+state.session+"&friend_id="+friend_id,
 		datatype:"json",
 		success: FriendAdd.onSuccess(response,friend_id),
@@ -214,9 +200,9 @@ FriendAdd.prototype.ajax = function(friend_id)
 	});
 };
 
-FriendAdd.prototype.onSuccess = function(response,friend_id)
+FriendAdd.onSuccess = function(response,friend_id)
 {
-	if(response.error != undefined){
+	if(response.error !== undefined){
 		return throwError(error);
 	}
 		
@@ -239,11 +225,11 @@ function FriendRemove(){
 	
 }
 
-FriendRemove.prototype.ajax = function(friend_id)
+FriendRemove.ajax = function(friend_id)
 {
 	$.ajax({
 		type:"GET",
-		url:"http://li328.lip6.fr/CADENE_PANOU/FriendRemove",
+		url:"http://li328.lip6.fr:8280/CADENE_PANOU/friend/remove",
 		data:"session="+state.session+"&friend_id="+friend_id,
 		datatype:"json",
 		success: FriendRemove.onSuccess(response,friend_id),
@@ -254,9 +240,9 @@ FriendRemove.prototype.ajax = function(friend_id)
 };
 
 // TODO
-FriendRemove.prototype.onSuccess = function()
+FriendRemove.onSuccess = function()
 {
-	if(response.error != undefined){
+	if(response.error !== undefined){
 		return throwError(error);
 	}
 	var user = state.users[id];
@@ -272,15 +258,13 @@ FriendRemove.prototype.onSuccess = function()
 
 /* Object UserLogout */
 
-function UserLogout(){
-	
-}
+function UserLogout(){};
 
-UserLogout.prototype.ajax = function()
+UserLogout.ajax = function()
 {
 	$.ajax({
 		type:"GET",
-		url:"http://li328.lip6.fr/CADENE_PANOU/UserLogout",
+		url:"http://li328.lip6.fr:8280/CADENE_PANOU/user/logout",
 		data:"session="+state.session,
 		datatype:"json",
 		success: UserLogout.onSuccess(response),
@@ -291,67 +275,63 @@ UserLogout.prototype.ajax = function()
 };
 
 
-UserLogout.prototype.onSuccess = function(response){
+UserLogout.onSuccess = function(response){
 	state.actif = undefined;
 };
 
-/* Object CurrentUser */
-
-function CurrentUser(){
-	
-}
-
-/*
-CurrentUser.change = function()
-{
-	$.ajax({
-		type:"GET",
-		url:"http://li328.lip6.fr/CADENE_PANOU/UserLogout",
-		data:"session="+state.session,
-		datatype:"json",
-		success: UserLogout.onSuccess(response),
-		error: function(error){
-			throwError(error);
-		}
-	});
-};
-*/
 
 /* Object MyProfil */
 
-function MyProfil(session){
+function MyProfil(id,session){
+	this.id = id;
 	this.session = session;
-	this.id = null;
 }
 
-MyProfil.ajax = function (){
+MyProfil.ajax = function (session){
 	$.ajax({
 		type:"GET",
-		url:"http://li328.lip6.fr/CADENE_PANOU/UserLogin",
-		data:"session="+this.session,
+		url:"http://li328.lip6.fr:8280/CADENE_PANOU/user/get",
+		data:"session="+session,
 		datatype:"json",
-		success: MyProfil.onSuccess(response),
-		error: function(error){
-			throwError(error);
-		}
-	});
-}
-
-/*
-CurrentUser.change = function()
-{
-	$.ajax({
-		type:"GET",
-		url:"http://li328.lip6.fr/CADENE_PANOU/UserLogout",
-		data:"session="+state.session,
-		datatype:"json",
-		success: UserLogout.onSuccess(response),
+		success: function(response){
+			MyProfil.onSuccess(response,session);
+		},
 		error: function(error){
 			throwError(error);
 		}
 	});
 };
-*/
+
+MyProfil.onSuccess = function(response,session)
+{
+	var obj = JSON.parse(response,this.reviver);
+	if(response.error !== undefined){
+		return throwError(error);
+	}
+	
+	var user = obj.user;
+	state.myProfil = new MyProfil(user.id, session);
+	state.currentUser_id = user.id;
+	state.users[user.id] = user;
+	
+	var html = "<div id=\"user_infos\">" +
+			"<div>Bienvenue "+ user.firstName +" "+ user.lastName +"</div>" +
+			"</div>";
+	
+	$("#user_infos").replaceWith(html);
+};
+
+
+MyProfil.reviver = function(key,value)
+{
+	if(key == 'user'){
+		return new User(
+			value.id, value.email, value.firstName, value.lastName
+		);
+	}
+	
+	return value;
+};
 
 	
 /** FUNCTIONS **/
@@ -363,26 +343,23 @@ function throwError(error) {
 	return true;
 }
 
-function verifySession()
-{
-	console.log(getQueryString("session"));
-}
+
 
 function getQueryString(key, default_) {
-    if (default_==null) default_="";
+    if (default_ === null) default_="";
     key = key.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
     var regex = new RegExp("[\\?&]"+key+"=([^&#]*)");
     var qs = regex.exec(window.location.href);
-    if(qs == null) return default_; else return qs[1];
+    if(qs === null) return default_; else return qs[1];
 }
 
 function formatDate(date){
 	diff = dateDiff(date, new Date());
-	if(diff.day != 0)
+	if(diff.day !== 0)
 		return diff.day + " day(s)";
-	if(diff.hour != 0)
+	if(diff.hour !== 0)
 		return diff.hour + " hour(s)";
-	if(diff.min != 0)
+	if(diff.min !== 0)
 		return diff.min + " min(s)";
 	return diff.sec + " sec(s)";
 }
@@ -390,8 +367,6 @@ function formatDate(date){
 function dateDiff(date1, date2){
     var diff = {};                          // Initialisation du retour
     var tmp = date2.valueOf() - date1.valueOf();
-    
-    console.log(date2 + "-" + date1 + "=" + tmp);
  
     tmp = Math.floor(tmp/1000);             // Nombre de secondes entre les 2 dates
     diff.sec = tmp % 60;                    // Extraction du nombre de secondes

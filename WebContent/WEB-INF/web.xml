@@ -10,6 +10,15 @@
         <servlet-name>UserLogin</servlet-name>
         <url-pattern>/user/login</url-pattern>
     </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>UserGet</servlet-name>
+        <servlet-class>servlet.UserGet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UserGet</servlet-name>
+        <url-pattern>/user/get</url-pattern>
+    </servlet-mapping>
 
     <servlet>
         <servlet-name>UserLogout</servlet-name>
@@ -30,12 +39,12 @@
     </servlet-mapping>
 
     <servlet>
-        <servlet-name>PwittAdd</servlet-name>
-        <servlet-class>servlet.PwittAdd</servlet-class>
+        <servlet-name>PwittSend</servlet-name>
+        <servlet-class>servlet.PwittSend</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>PwittAdd</servlet-name>
-        <url-pattern>/pwitt/add</url-pattern>
+        <servlet-name>PwittSend</servlet-name>
+        <url-pattern>/pwitt/send</url-pattern>
     </servlet-mapping>
     
     <servlet>
