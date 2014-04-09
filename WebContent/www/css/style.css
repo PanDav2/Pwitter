@@ -27,7 +27,6 @@ a,a:visited
 a:hover
 {
 	color:#7DBDEC;
-	border-bottom: #7DBDEC dotted 1px;
 }
 
 .clear {
@@ -52,7 +51,7 @@ input[type=text] {
 /* Container :: Header + Content + Footer */
 
 #container {
-	width:914px;
+	width:1200px;
 	margin:0px auto 0px auto;
 	border:solid;
 }
@@ -61,11 +60,11 @@ input[type=text] {
 /* Header :: Logo + Search-Area + Login-Register */
 
 #header {
-	width:890px;
+	width:1176px;
 	height:110px;
-	padding:7px 7px 20px 7px;
+	padding:7px 7px 24px 7px;
 	background: #000000;
-	margin: 20px 5px 7px 5px;
+	margin: 6px 5px 7px 5px;
 }
 
 #logo{
@@ -79,10 +78,10 @@ input[type=text] {
 	width: 450px;
 	padding: 0px 0px 0px 0px;
 	float:left;
-	margin: 5px 0px 0px 30px;
+	margin: 5px 0px 0px 140px;
 }
 
-#user_info{
+#user_infos{
 	display:inline-block;       
 	width: 250px;
 	margin: 5px 0px 0px 0px;
@@ -98,12 +97,22 @@ input[type=text] {
 	margin: 4px 0px 15px 100px;
 }
 
-#header h2 {
+#login-register h2 {
 	position:relative;
 	float:center;
 	font-size:20px;
 	color:#FFFFFF;
 	margin: 4px 0px 10px 100px;
+	text-align:center;
+}
+
+#login-register div {
+	position:relative;
+	float:center;
+	font-size:20px;
+	color:#1779CA;
+	margin: 4px 0px 10px 100px;
+	text-align:center;
 }
 
 .header-links {
@@ -132,7 +141,8 @@ input[type=text] {
 	width:250px;
 }
 #maincol_container {
-	width:650px;	
+	width:915px;	
+	border:solid;
 }
 
 .leftcol, .maincol {
@@ -150,7 +160,7 @@ input[type=text] {
 .maincol {
 	display:block;
 	background-color:#EEF5FB;
-	width:620px;
+	width:905px;
 }
 
 .leftcol_bottom {
@@ -161,7 +171,7 @@ input[type=text] {
 }
 .maincol_bottom {
 	background-color:#EEF5FB;
-	width:630px;
+	width:915px;
 	height:8px;
 	margin-bottom:13px;
 }

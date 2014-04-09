@@ -8,14 +8,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONException;
 
-public class FriendsFind extends HttpServlet{
+public class UserFindBySession extends HttpServlet{
 	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-
-	@Override
+	//http://li328.lip6.fr:8280/CADENE_PANOU/users/login?username=Tamazy&password=azerty
+	
 	protected void doGet (HttpServletRequest req, HttpServletResponse resp) throws IOException{
 		
 		resp.setContentType("plain/text");
@@ -25,8 +21,7 @@ public class FriendsFind extends HttpServlet{
 			String session =  req.getParameter("session");
 		
 			try {
-				resp.getWriter().println(services.Friend.find(session
-						).toString());
+				resp.getWriter().println(services.User.findBySession(session).toString());
 			} catch (JSONException e) {
 				resp.getWriter().println(ServletTools.JSONError());
 			}

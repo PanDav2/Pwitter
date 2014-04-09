@@ -36,7 +36,7 @@ public class Admin {
 			DBCollection coll = db. getCollection ("Pwitts");
 			
 			String m = "function() { " +
-							"var words = this.content.match(/[\\wéèêàôöîïüûù']+/g); " +
+							"var words = this.content.toLowerCase().match(/[\\wéèêàôöîïüûù']+/g); " +
 							"tab = []; " +
 							"for(w in words) { " +
 								"tab[w] = 1; " +
@@ -62,7 +62,7 @@ public class Admin {
 			
 			ArrayList<String> words = new ArrayList<String>();
 			
-			// TODO finir
+			// TODO Améliorer ?
 			String sql;
 			PreparedStatement ps;
 			
@@ -73,8 +73,6 @@ public class Admin {
 			    	+ "VALUES (\"" + obj.get("_id").toString() + "\"," + obj.get("value").toString() +")"
 			    	+ "ON DUPLICATE KEY UPDATE nb_pwitts = " + obj.get("value").toString();
 			    ps = con.prepareStatement(sql);
-				//ps.setString(1, obj.get("_id").toString());
-				//ps.setString(2, obj.get("value").toString());
 				ps.execute();
 				ps.close();
 				words.add(obj.toString());
@@ -117,20 +115,17 @@ public class Admin {
 								"occs[words[w]] = 0; " +
 							"}" +
 							"var nb_words = occ.length;" +
-							"for(word in occs) {" +
+							"for(w in occs) {" +
 								"occs[word]++;" +
 							"}" +
-							"for(word in occsq) { " +
-								"emit(words[w],tab[w]); " +
+							"for(w in occs) { " +
+								"var freq = occs[w] / words.length;" +
+								"emit(words[w],{pwitt_id:this._id,frequency:freq}); " +
 							"}" +
 						"}";
 			
 			String r = "function(key,values) { " +
-							"total = 0; " +
-							"for(var i in values) { " +
-								"total += values[i]; " +
-							"} " +
-							"return total;" +
+							"return values;" +
 						"}";
 		
 			MapReduceCommand cmd = new MapReduceCommand(coll,m,r,null,

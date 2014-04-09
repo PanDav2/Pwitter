@@ -12,12 +12,21 @@
     </servlet-mapping>
     
     <servlet>
-        <servlet-name>UserGet</servlet-name>
-        <servlet-class>servlet.UserGet</servlet-class>
+        <servlet-name>UserFindBySession</servlet-name>
+        <servlet-class>servlet.UserFindBySession</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>UserGet</servlet-name>
-        <url-pattern>/user/get</url-pattern>
+        <servlet-name>UserFindBySession</servlet-name>
+        <url-pattern>/user/findBySession</url-pattern>
+    </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>UserFindById</servlet-name>
+        <servlet-class>servlet.UserFindById</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UserFindById</servlet-name>
+        <url-pattern>/user/findById</url-pattern>
     </servlet-mapping>
 
     <servlet>
@@ -72,6 +81,15 @@
     <servlet-mapping>
         <servlet-name>FriendRemove</servlet-name>
         <url-pattern>/friend/remove</url-pattern>
+    </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>FriendsFind</servlet-name>
+        <servlet-class>servlet.FriendsFind</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>FriendsFind</servlet-name>
+        <url-pattern>/friends/find</url-pattern>
     </servlet-mapping>
     
     <servlet>

@@ -1,31 +1,54 @@
 $(function() {
 	
 	var session = getQueryString("session");
+	var user_id = getQueryString("user_id");
 	
-	if(session === undefined)
-		window.location = "connection.html";
 	
-	MyProfil.ajax(session);
+	/* Version : Session */
 	
-	if(state.currentUser_id != state.MyProfil.id)
-		$("#button-PwittsFind").hide();
-	
-	//PwittsFind.ajax();
-	
-	//PwittsFind.onSuccess(JSONPwittsTest());
-	
-	$("#form-PwittSend").submit(function(){
-		var content = $("#input-PwittSend").val();
-		if(content != "")
-			PwittSend.ajax(content);
-		return false;
-	});
-	
-	$("#button-PwittsFind").click(function(){
-		PwittsFind.ajax();
-		return false;
-	});
-
+	if (session !== undefined) {
+		
+		MyProfil.ajax(session);
+		
+		if (user_id !== undefined){
+			
+			/* Version : Session, mais user_id != */
+			CurrentProfil.ajax(user_id);
+			$("#button-PwittsFind").hide();
+			
+		}else{
+			
+			/* Version : Session & pas de user_id */
+			
+			$("#form-PwittSend").submit(function(){
+				var content = $("#input-PwittSend").val();
+				if(content.length != 0){
+					PwittSend.ajax(content);
+				}
+				return false;
+			});
+			
+			$("#menu-MyFriends").click(function(){
+				FriendsFind.ajax(state.myProfil.session);
+				return false;
+			});
+			
+			$("#menu-MyPwitts").click(function(){
+				PwittsFind.ajax(state.myProfil.session);
+				return false;
+			});
+		
+		}
+		
+	}else{
+		/* Version : !Session, mais user_id */
+		if (user_id !== undefined) {
+			CurrentProfil.ajax(user_id);
+		}else{
+			window.location = "connection.html";
+		}
+	}
+		
 });
 
 

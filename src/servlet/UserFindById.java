@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONException;
 
-public class UserGet extends HttpServlet{
+public class UserFindById extends HttpServlet{
 	
 	//http://li328.lip6.fr:8280/CADENE_PANOU/users/login?username=Tamazy&password=azerty
 	
@@ -21,7 +21,7 @@ public class UserGet extends HttpServlet{
 			String session =  req.getParameter("session");
 		
 			try {
-				resp.getWriter().println(services.User.get(session).toString());
+				resp.getWriter().println(services.User.findById(session).toString());
 			} catch (JSONException e) {
 				resp.getWriter().println(ServletTools.JSONError());
 			}

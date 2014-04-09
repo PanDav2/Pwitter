@@ -35,6 +35,18 @@ User.prototype.changeFriendship = function()
 	this.isFriend = !this.isFriend;
 };
 
+User.prototype.getHTML = function(){
+	var html = "<h2><a href=\"?user_id="+this.id+"\">" + this.firstName + " " + this.lastName + "<small></a> :: " + this.email + "</small>";
+	
+	if(isFriend == true)
+		html += "<input type=\"submit\" value=\"-\" onclick=\"FriendRemove("+ this.id +")/>";
+	else
+		html += "<input type=\"submit\" value=\"+\" onclick=\"FriendAdd("+ this.id +")/>";
+	html += "</h2>";
+	
+	return html;
+};
+
 /* Object Pwitt */
 
 function Pwitt(id, user, content, date, score)
@@ -47,7 +59,7 @@ function Pwitt(id, user, content, date, score)
 		this.score = score; //undefined
 }
 
-Pwitt.prototype.getHtml = function()
+Pwitt.prototype.getHTML = function()
 {
 	var html = "<div id=\"Pwitt_" + this.id + "\">\n"
 		+ "<h2>" + this.user.firstName + " " + this.user.lastName + "<small> :: " + this.user.email + " :: " + formatDate(this.date) + "</small></h2>\n"
@@ -82,11 +94,11 @@ function PwittsFind(pwitts, user_id, date, words, doFriends)
 	state.pwittsFind = this;	
 }
 
-PwittsFind.prototype.getHtml = function()
+PwittsFind.prototype.getHTML = function()
 {
 	var s = "<div class=\"maincol\">\n";
 	for(var i=this.pwitts.length-1; i>=0; i--){
-		s += this.pwitts[i].getHtml()+"\n";
+		s += this.pwitts[i].getHTML()+"\n";
 	}
 	s += "</div>\n<div class=\"maincol_bottom\"></div";
 	return s;
@@ -110,7 +122,6 @@ PwittsFind.reviver = function(key,value)
 				value[i].score
 			);
 		}
-		console.log(tab);
 		return tab;
 	}
 	if(key == 'user'){
@@ -145,11 +156,14 @@ PwittsFind.onSuccess = function(response)
 		return throwError(obj.error);
 	}
 	state.pwittsFind = obj;
-	console.log(obj);
-	$("#pwitts").prepend(obj.getHtml());
+	
+	$("#page_name").html("Liste des pwitts");
+	$("#form-PwittSend").show();
+	$("#maincol_content").html(obj.getHTML());
 };
 
-/* Object PwittSend */
+/**********************/
+/** Object PwittSend **/
 
 function PwittSend(){};
 
@@ -175,14 +189,19 @@ PwittSend.onSuccess = function(response,content)
 	if(obj.error !== undefined){
 		return throwError(obj.error);
 	}
+	/* Mise en forme PwittSend */ 
 	
-	var html = "<div>" +content+ "</div>";
+	var id = state.myProfil.id;
+	var user = state.users[id];
+	var pwitt = new Pwitt(0,user,content,new Date,0);
+		
+	var html = pwitt.getHTML();
 	
-	$("form").prepend(html);
+	$("#maincol").prepend(html);
 };
 
-
-/* Object FriendAdd */
+/**********************/
+/** Object FriendAdd **/
 
 function FriendAdd(){};
 
@@ -218,8 +237,8 @@ FriendAdd.onSuccess = function(response,friend_id)
 	
 };
 
-
-/* Object FriendRemove */
+/*************************/
+/** Object FriendRemove **/
 
 function FriendRemove(){
 	
@@ -256,7 +275,8 @@ FriendRemove.onSuccess = function()
 	}
 };
 
-/* Object UserLogout */
+/***********************/
+/** Object UserLogout **/
 
 function UserLogout(){};
 
@@ -279,8 +299,8 @@ UserLogout.onSuccess = function(response){
 	state.actif = undefined;
 };
 
-
-/* Object MyProfil */
+/*********************/
+/** Object MyProfil **/
 
 function MyProfil(id,session){
 	this.id = id;
@@ -290,7 +310,7 @@ function MyProfil(id,session){
 MyProfil.ajax = function (session){
 	$.ajax({
 		type:"GET",
-		url:"http://li328.lip6.fr:8280/CADENE_PANOU/user/get",
+		url:"http://li328.lip6.fr:8280/CADENE_PANOU/user/findBySession",
 		data:"session="+session,
 		datatype:"json",
 		success: function(response){
@@ -304,7 +324,7 @@ MyProfil.ajax = function (session){
 
 MyProfil.onSuccess = function(response,session)
 {
-	var obj = JSON.parse(response,this.reviver);
+	var obj = JSON.parse(response,MyProfil.reviver);
 	if(response.error !== undefined){
 		return throwError(error);
 	}
@@ -314,13 +334,16 @@ MyProfil.onSuccess = function(response,session)
 	state.currentUser_id = user.id;
 	state.users[user.id] = user;
 	
-	var html = "<div id=\"user_infos\">" +
-			"<div>Bienvenue "+ user.firstName +" "+ user.lastName +"</div>" +
+	var html = "<div id=\"login-register\">" +
+			"<h2>Current Profil</h2>" +
+			"<div>"+ user.firstName +" "+ user.lastName+"</div>"+
+			"<div>"+ user.email +"</div>" +
 			"</div>";
 	
-	$("#user_infos").replaceWith(html);
+	$("#login-register").replaceWith(html);
+	
+	PwittsFind.ajax();
 };
-
 
 MyProfil.reviver = function(key,value)
 {
@@ -333,6 +356,122 @@ MyProfil.reviver = function(key,value)
 	return value;
 };
 
+/**************************/
+/** Object CurrentProfil **/
+
+function CurrentProfil(){};
+
+CurrentProfil.ajax = function (id){
+	$.ajax({
+		type:"GET",
+		url:"http://li328.lip6.fr:8280/CADENE_PANOU/user/findById",
+		data:"id="+id,
+		datatype:"json",
+		success: function(response){
+			CurrentProfil.onSuccess(response);
+		},
+		error: function(error){
+			throwError(error);
+		}
+	});
+};
+
+CurrentProfil.onSuccess = function(response)
+{
+	var obj = JSON.parse(response,this.reviver);
+	if(response.error !== undefined){
+		return throwError(error);
+	}
+	
+	var user = obj.user;
+	state.currentUser_id = user.id;
+	state.users[user.id] = user;
+	
+	var html = "<div id=\"login-register\">" +
+			"<div>"+ user.firstName +" "+ user.lastName +"</div>" +
+			"</div>";
+	
+	$("#login-register").replaceWith(html);
+};
+
+MyProfil.reviver = function(key,value)
+{
+	if(key == 'user'){
+		return new User(
+			value.id, value.email, value.firstName, value.lastName
+		);
+	}
+	
+	return value;
+};
+
+/************************/
+/** Object FriendsFind **/
+
+function FriendsFind(users)
+{
+	this.users = users;
+};
+
+FriendsFind.prototype.getHTML = function()
+{
+	var s = "<div id=\"pwitts\">";
+		s += "<div class=\"maincol\">\n";
+	for(var i=0; i<this.users.length; i++){
+		s += this.users[i].getHTML()+"\n";
+	} 
+		s += "</div>\n<div class=\"maincol_bottom\"></div>";
+	s += "</div>";
+	return s;
+};
+
+FriendsFind.ajax = function ()
+{
+	$.ajax({
+		type:"GET",
+		url:"http://li328.lip6.fr:8280/CADENE_PANOU/friends/find",
+		data:"session="+state.myProfil.session,
+		datatype:"json",
+		success: function(response){
+			FriendsFind.onSuccess(response);
+		},
+		error: function(error){
+			throwError(error);
+		}
+	});
+};
+
+FriendsFind.onSuccess = function(response)
+{
+	var obj = JSON.parse(response,FriendsFind.reviver);
+	if(response.error !== undefined){
+		return throwError(error);
+	}
+	
+	var friends = obj.friends;
+	
+	$("#pwitts").replaceWith(friends.getHTML());
+};
+
+FriendsFind.reviver = function(key,value)
+{
+	if(key == 'friends'){
+		var users = [value.length];
+		for(var i=0;i<value.length;i++){
+			users[i] = value[i].user;
+		}
+		var tmp = new FriendsFind(users);
+		return tmp;
+	}
+	
+	if(key == 'user'){
+		return new User(
+			value.id, value.email, value.firstName, value.lastName, true
+		);
+	}
+	return value;
+};
+
 	
 /** FUNCTIONS **/
 
@@ -342,8 +481,6 @@ function throwError(error) {
 	$("form").prepend(box);
 	return true;
 }
-
-
 
 function getQueryString(key, default_) {
     if (default_ === null) default_="";

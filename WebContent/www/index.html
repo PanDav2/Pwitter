@@ -4,7 +4,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <title>Pwitter</title>
   <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
-  <!--  <link rel="stylesheet" type="text/css" href="css/style.css" /> -->
+   <link rel="stylesheet" type="text/css" href="css/style.css" /> 
 </head>
 <body>
 
@@ -21,9 +21,12 @@
         		<input class="display-none" type="submit" name="submit" value="Envoyer" />
       		</form>
     	</div>
-    	<div id="user_infos">
-      		<div>Bienvenue à toi jeune Pwitter</div>
-    	</div>
+    	<div id="login-register">
+	    	<h2>Liens</h2>
+	      <a class="header-links" href="./connection.html">Connexion</a>
+	      <br />
+	      <a class="header-links" href="./connection.html">Enregistrement</a>
+	    </div>
 	</div> <!-- #header end -->
     
   
@@ -33,11 +36,12 @@
     		<div class="leftcol">
 				<h2>Menu</h2>
         		<ul>
-          			<li><a href="#">MyStats</a></li>
-					<li><a href="#">Friends</a></li>
-					<li><a href="#">Pwitts</a></li>
-					<li><a href="#">Logout</a></li>
+        			<li><a href="#">My Profil</a>
+					<li><a id="menu-MyPwitts" href="#">My Pwitts</a></li>
+          			<li><a id="menu-MyStats" href="#MyStats">My Stats</a></li>
+					<li><a id="menu-MyFriends" href="#MyFriends">My Friends</a></li>
 					<li><a href="#">Find some Pwitts</a>
+					<li><a href="#">Logout</a></li>
          		</ul>
         		<p>&nbsp;</p>
         		<h2>Statistiques2</h2>
@@ -55,19 +59,21 @@
     
 		<div id="maincol_container">
       
-      		<div class="maincol">
-		      	<h1 style="text-align:center;margin-bottom:15px;">Liste des Pwitts</h1>
-		        <form id="form-PwittSend" action="pwitt.html">
-		          <input id="input-PwittSend" type="text" name="new-pwitt" placeholder="Envoyer un Pwitt à tous vos amis !"/>
-		          <input class="display-none" type="submit" name="submit" value="Envoyer" />
-		        </form>
-		    </div>
-      		<div class="maincol_bottom"></div>
+      		<div id="maincol_header">
+	      		<div class="maincol">
+			      	<h1 id="page_name" style="text-align:center;margin-bottom:15px;">Bienvenue</h1>
+			        <form class="display-none" id="form-PwittSend" action="pwitt.html">
+			          <input id="input-PwittSend" type="text" name="new-pwitt" placeholder="Envoyer un Pwitt à tous vos amis !"/>
+			          <input class="display-none" type="submit" name="submit" value="Envoyer" />
+			        </form>
+			    </div>
+	      		<div class="maincol_bottom">
+      		</div>
 
-			<input id="button-PwittsFind" class="display-none" type="submit" name="submit" value="Update PwittsList" />
+			<!--  <input id="button-PwittsFind" class="display-none" type="submit" name="submit" value="Update PwittsList" /> -->
 
-		 	<div id="pwitts">
-	      
+		 	<div id="maincol_content">
+	      		<!-- 
 				<div class="maincol">          
 					<h2>Remi Cadene <small>@RemiCadene : 11 mins</small></h2>
 					<p>Je m'appelle Rémi et je suis sans famille ^.^ #Enfant2coeur</p>
@@ -80,8 +86,9 @@
 					<p>&nbsp;</p>
 				</div>
 				<div class="maincol_bottom"></div>
-	
+				 -->
 			</div>
+			
 		</div> <!-- #maincol-container End -->
       
       

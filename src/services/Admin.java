@@ -47,8 +47,8 @@ public class Admin {
 			for(String word : words){
 				JSONWords.add(new JSONObject(word));
 			}
-			json.put("words",  new JSONArray(JSONWords));
-			
+			//json.put("words",  new JSONArray(JSONWords));
+			json.put("words", words.toString());
 			return json;
 		}
 		catch(CoreException e)

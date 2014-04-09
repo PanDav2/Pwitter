@@ -172,7 +172,7 @@ public class User {
 		}
 	}
 
-	public static ArrayList<String> get(String session) throws CoreException {
+	public static ArrayList<String> findBySession(String session) throws CoreException {
 		try {
 
 	 			Class.forName("com.mysql.jdbc.Driver").newInstance();
@@ -210,6 +210,46 @@ public class User {
 			throw new CoreException(e.getMessage(),10);
 		}
 	}
+	
+	public static ArrayList<String> findById(String id) throws CoreException {
+		try {
+
+	 			Class.forName("com.mysql.jdbc.Driver").newInstance();
+			    Connection con = MySQLDB.getConnection();
+			    
+			    String sql = "SELECT id, email, firstName, lastName "
+			    		   + "FROM Cadene_Panou.Users "
+			    		   + "WHERE id = ?;";
+				PreparedStatement ps = con.prepareStatement(sql);
+				ps.setString(1,id);
+				ResultSet rset = ps.executeQuery();
+				if(!rset.next()){
+					throw new CoreException(2000);
+				}
+				int getId = rset.getInt(1);
+				String email = rset.getString(2);
+				String firstName = rset.getString(3);
+				String lastName = rset.getString(4);
+				
+				ArrayList<String> rslt = new ArrayList<String>();
+			    rslt.add(String.valueOf(id));
+			    rslt.add(email);
+			    rslt.add(firstName);
+			    rslt.add(lastName);
+			    
+			    return rslt;
+			    
+		} catch (ClassNotFoundException e) {
+		    throw new RuntimeException("Cannot find the driver in the classpath!", e);
+		} catch (InstantiationException e) {
+			throw new CoreException(e.getMessage(),12);
+		} catch (IllegalAccessException e) {
+			throw new CoreException(e.getMessage(),11);
+		} catch (SQLException e) {
+			throw new CoreException(e.getMessage(),10);
+		}
+	}
+
 	
 }
 
