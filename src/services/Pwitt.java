@@ -24,6 +24,7 @@ public class Pwitt {
 		}
 	}
 	
+	// TODO rajouter le pwitt.id
 	static public JSONObject find(String session,String words,String dofriends) throws JSONException{
 		try
 		{

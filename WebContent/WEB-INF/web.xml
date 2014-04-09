@@ -84,6 +84,15 @@
     </servlet-mapping>
     
     <servlet>
+        <servlet-name>AdminFreqsMapReduce</servlet-name>
+        <servlet-class>servlet.AdminFreqsMapReduce</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AdminFreqsMapReduce</servlet-name>
+        <url-pattern>/admin/freqs/mapreduce</url-pattern>
+    </servlet-mapping>
+    
+    <servlet>
         <servlet-name>AdminPwittsDrop</servlet-name>
         <servlet-class>servlet.AdminPwittsDrop</servlet-class>
     </servlet>

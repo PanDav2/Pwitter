@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Client: localhost
--- Généré le: Mar 08 Avril 2014 à 17:01
+-- Généré le: Mer 09 Avril 2014 à 00:30
 -- Version du serveur: 5.5.33-1-log
 -- Version de PHP: 5.5.8-3
 
@@ -149,13 +149,13 @@ CREATE TABLE IF NOT EXISTS `MRFreqs` (
 --
 
 CREATE TABLE IF NOT EXISTS `MRWords` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(100) COLLATE utf8_bin NOT NULL,
   `nb_pwitts` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name_2` (`name`),
   KEY `name` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -219,7 +219,7 @@ CREATE TABLE IF NOT EXISTS `Users` (
 --
 
 INSERT INTO `Users` (`id`, `password`, `firstname`, `lastname`, `email`, `isValid`, `created`, `lastUpdate`, `lastModify`, `image_id`, `session`, `lastLogin`) VALUES
-(12, 'philvirg', 'Remi', 'Cadene', 'remicadene@laposte.net', NULL, 1396392645, NULL, NULL, NULL, '3811dc74237c46ea41767ad8f3309bd45fd92628', 1396966767),
+(12, 'philvirg', 'Remi', 'Cadene', 'remicadene@laposte.net', NULL, 1396392645, NULL, NULL, NULL, '45b19f04d2892c63db807a9fd699bb2ed5a276d3', 1396992448),
 (13, 'azerty', 'David', 'David', 'david@panou.fr', NULL, 1396393105, NULL, NULL, NULL, NULL, NULL),
 (14, 'azerty', 'Alex', 'Ndoye', 'Alex@Ndoye.fr', NULL, 1396393275, NULL, NULL, NULL, NULL, NULL);
 

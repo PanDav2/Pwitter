@@ -7,7 +7,8 @@ $(function() {
 	
 	MyProfil.ajax(session);
 	
-	
+	if(state.currentUser_id != state.MyProfil.id)
+		$("#button-PwittsFind").hide();
 	
 	//PwittsFind.ajax();
 	

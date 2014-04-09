@@ -58,6 +58,85 @@ public class Admin {
 					MapReduceCommand.OutputType.INLINE,null);
 			MapReduceOutput out = coll.mapReduce(cmd);
 			
+			Connection con = MySQLDB.getConnection();
+			
+			ArrayList<String> words = new ArrayList<String>();
+			
+			// TODO finir
+			String sql;
+			PreparedStatement ps;
+			
+			for(DBObject obj : out.results())
+			{
+			    sql = "INSERT INTO Cadene_Panou.MRWords "
+			    	+ "(name, nb_pwitts) "
+			    	+ "VALUES (\"" + obj.get("_id").toString() + "\"," + obj.get("value").toString() +")"
+			    	+ "ON DUPLICATE KEY UPDATE nb_pwitts = " + obj.get("value").toString();
+			    ps = con.prepareStatement(sql);
+				//ps.setString(1, obj.get("_id").toString());
+				//ps.setString(2, obj.get("value").toString());
+				ps.execute();
+				ps.close();
+				words.add(obj.toString());
+			}
+			
+			con.close();
+			
+			return words;
+			
+		} catch (UnknownHostException e) {
+			throw new CoreException(e.getMessage(),12);
+		} catch (MongoException e) {
+			throw new CoreException(e.getMessage(),12);
+		} catch (ClassNotFoundException e) {
+		    throw new RuntimeException("Cannot find the driver in the classpath!", e);
+		} catch (InstantiationException e) {
+			throw new CoreException(e.getMessage(),12);
+		} catch (IllegalAccessException e) {
+			throw new CoreException(e.getMessage(),11);
+		} catch (SQLException e) {
+			throw new CoreException(e.getMessage(),10);
+		}
+	}
+	
+	static public ArrayList<String> freqsMapReduce(String password) throws CoreException
+	{
+
+		_isAdmin(password);
+		
+		try {
+			
+			DB db = MongoDB.getConnection();
+			
+			DBCollection coll = db. getCollection ("Pwitts");
+			
+			String m = "function() { " +
+							"var words = this.content.match(/[\\wéèêàôöîïüûù']+/g); " +
+							"var occs = []; " +
+							"for(w in words) { " +
+								"occs[words[w]] = 0; " +
+							"}" +
+							"var nb_words = occ.length;" +
+							"for(word in occs) {" +
+								"occs[word]++;" +
+							"}" +
+							"for(word in occsq) { " +
+								"emit(words[w],tab[w]); " +
+							"}" +
+						"}";
+			
+			String r = "function(key,values) { " +
+							"total = 0; " +
+							"for(var i in values) { " +
+								"total += values[i]; " +
+							"} " +
+							"return total;" +
+						"}";
+		
+			MapReduceCommand cmd = new MapReduceCommand(coll,m,r,null,
+					MapReduceCommand.OutputType.INLINE,null);
+			MapReduceOutput out = coll.mapReduce(cmd);
+			
 			ArrayList<String> words = new ArrayList<String>();
 			
 			for(DBObject obj : out.results()){
