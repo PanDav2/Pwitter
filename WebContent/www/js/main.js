@@ -34,7 +34,12 @@ $(function() {
 			});
 			
 			$("#menu-MyPwitts").click(function(){
-				PwittsFind.ajax(state.myProfil.session);
+				PwittsFind.ajaxMyPwitts();
+				return false;
+			});
+			
+			$("#menu-AllPwitts").click(function(){
+				PwittsFind.ajaxAllPwitts();
 				return false;
 			});
 		
@@ -45,7 +50,7 @@ $(function() {
 		if (user_id !== undefined) {
 			CurrentProfil.ajax(user_id);
 		}else{
-			window.location = "connection.html";
+			//window.location = "connection.html";
 		}
 	}
 		

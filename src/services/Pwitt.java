@@ -25,10 +25,10 @@ public class Pwitt {
 	}
 	
 	// TODO rajouter le pwitt.id
-	static public JSONObject find(String session,String words,String dofriends) throws JSONException{
+	static public JSONObject find(String session,String words,String dofriends,String doallusers) throws JSONException{
 		try
 		{
-			ArrayList<String> pwitts = core.Pwitt.find(session,words,dofriends);
+			ArrayList<String> pwitts = core.Pwitt.find(session,words,dofriends,doallusers);
 			ArrayList<JSONObject> JSONPwitts = new ArrayList<JSONObject>();
 			
 			JSONObject json = new JSONObject();
@@ -36,14 +36,15 @@ public class Pwitt {
 			
 			json.put("date", tools.Time.getCurrentTimeUnix());
 			
-			if(session != "")
+			if(session.length() != 0)
 			{
 				json.put("user_id", core.User.isAuthentified(session));
 				
-				if(dofriends != "")
-					json.put("dofriends", 0);
-				else
-					json.put("dofriends", dofriends);
+				if(dofriends.length() != 0)
+					json.put("dofriends", true);
+				
+				if(doallusers.length() != 0)
+					json.put("doallusers", true);
 			}
 			
 			if(words != "")

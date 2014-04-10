@@ -83,23 +83,38 @@ public class Pwitt {
 		
 	}
 	
-	static public ArrayList<String> find(String session,String words,String dofriends) throws CoreException
+	static public ArrayList<String> find(String session,String words,String dofriends, String doallusers) throws CoreException
 	{
 		// TODO parse words if exist by " " to ArrayList<String>
 		
-		if(session != ""){
+		// si session
+		if(session.length() != 0)
+		{
 			int user_id = User.isAuthentified(session);
-			if(words != ""){
+			
+			// si mots
+			if(words.length() != 0)
+			{
 				if(dofriends == "" || dofriends == "0"){
 					//TODO return _find(user_id,words)
 				}else{
 					//TODO return _find(user_id,words,dofriends)
 				}
-			}else{
-				if(dofriends == "" || dofriends == "0"){
+			}
+			else
+			{
+				// si faire les amis
+				if(dofriends.length() != 0)
+				{
+					return _findDoFriends(user_id);
+				}
+				else if(doallusers.length() != 0)
+				{
+					return _findDoAllUsers(user_id);
+				}
+				else
+				{
 					return _find(user_id);
-				}else{
-					//TODO return _find(user_id,dofriends)
 				}
 			}
 		}else{
@@ -154,11 +169,9 @@ public class Pwitt {
 			DBCollection pwitts = db. getCollection ("Pwitts");
 			
 			BasicDBObject whereQuery = new BasicDBObject();
-			BasicDBObject user = new BasicDBObject();
-			user.put("id", user_id);
-			whereQuery.put("user", user);
-			
+			whereQuery.put("user.id", user_id);
 			DBCursor cur = pwitts.find(whereQuery);
+			
 			while(cur.hasNext()){
 				s.add( cur.next().toString() );
 			}
@@ -176,20 +189,22 @@ public class Pwitt {
 	 * Find all twitts from the friends of user_id
 	 * @return
 	 */
-	static private ArrayList<String> _find(int user_id, String dofriends) throws CoreException
+	static private ArrayList<String> _findDoFriends(int user_id) throws CoreException
 	{
-		//TODO recover friends of user_id from MySQL::Users
-		//TODO whereQuery MongoDB
-		
+		// TODO
 		try {
 			ArrayList<String> s = new ArrayList<String>();
 			DB db = MongoDB.getConnection();
 			
-			DBCollection coll = db. getCollection ("Pwitts");
-			DBCursor cur = coll.find();
+			DBCollection pwitts = db. getCollection ("Pwitts");
+			BasicDBObject whereQuery = new BasicDBObject();
+			whereQuery.put("user.id", user_id);
+			DBCursor cur = pwitts.find(whereQuery);
+			
 			while(cur.hasNext()){
 				s.add( cur.next().toString() );
 			}
+			
 			cur.close();
 			return s;
 			
@@ -197,6 +212,55 @@ public class Pwitt {
 			throw new CoreException(e.getMessage(),12);
 		} catch (MongoException e) {
 			throw new CoreException(e.getMessage(),12);
+		}
+	}
+	
+	static private ArrayList<String> _findDoAllUsers(int user_id) throws CoreException
+	{
+		try {
+
+ 			Class.forName("com.mysql.jdbc.Driver").newInstance();
+		    Connection con = MySQLDB.getConnection();
+		    
+		    String sql = "SELECT friend_id "
+		    		   + "FROM Cadene_Panou.Friends "
+		    		   + "WHERE user_id = ?;";
+			PreparedStatement ps = con.prepareStatement(sql);
+			ps.setInt(1,user_id);
+			ResultSet rset = ps.executeQuery();
+			
+			ArrayList<Integer> friends_id = new ArrayList<Integer>();
+			while(rset.next()){
+				friends_id.add(rset.getInt(1));
+			}
+		    
+	
+			DB db = MongoDB.getConnection();
+			DBCollection pwitts = db. getCollection ("Pwitts");
+			DBCursor cur = pwitts.find();
+
+			//TODO FUCKING JAVA DE MERDEEEEE
+			
+			ArrayList<String> s = new ArrayList<String>();
+			while(cur.hasNext()){
+				s.add( cur.next().toString() );
+			}
+			
+			cur.close();
+			return s;
+			
+		} catch (UnknownHostException e) {
+			throw new CoreException(e.getMessage(),12);
+		} catch (MongoException e) {
+			throw new CoreException(e.getMessage(),12);
+		} catch (ClassNotFoundException e) {
+		    throw new RuntimeException("Cannot find the driver in the classpath!", e);
+		} catch (InstantiationException e) {
+			throw new CoreException(e.getMessage(),12);
+		} catch (IllegalAccessException e) {
+			throw new CoreException(e.getMessage(),11);
+		} catch (SQLException e) {
+			throw new CoreException(e.getMessage(),10);
 		}
 	}
 	

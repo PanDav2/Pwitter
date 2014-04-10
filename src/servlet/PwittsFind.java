@@ -18,6 +18,7 @@ public class PwittsFind extends HttpServlet{
 		String session = "";
 		String words = "";
 		String dofriends = "";
+		String doallusers = "";
 		
 		if(req.getParameterMap().containsKey("session")) {
 			session = req.getParameter("session");
@@ -28,10 +29,13 @@ public class PwittsFind extends HttpServlet{
 		if(req.getParameterMap().containsKey("dofriends")) {
 			dofriends = req.getParameter("dofriends");
 		}
+		if(req.getParameterMap().containsKey("doallusers")) {
+			doallusers = req.getParameter("doallusers");
+		}
 		
 			
 		try {
-			resp.getWriter().println(services.Pwitt.find(session,words,dofriends).toString());
+			resp.getWriter().println(services.Pwitt.find(session,words,dofriends,doallusers).toString());
 		} catch (JSONException e) {
 			resp.getWriter().println(ServletTools.JSONError());
 		}

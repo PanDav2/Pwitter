@@ -48,7 +48,6 @@ public class Friend {
 			JSONObject json = new JSONObject();
 			JSONObject user;
 			JSONObject JSONFriend;
-			JSONObject clone;
 	
 			json.put("statut", "ok");
 			
@@ -59,6 +58,7 @@ public class Friend {
 				JSONFriend.put("email", friend.get(1));
 				JSONFriend.put("firstName", friend.get(2));
 				JSONFriend.put("lastName", friend.get(3));
+				JSONFriend.put("isFriend", true);
 				user.put("user", JSONFriend);
 				JSONFriends.add(user);
 			}

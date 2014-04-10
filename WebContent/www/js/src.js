@@ -16,6 +16,7 @@ function User(id, email, firstName, lastName, isFriend)
 	this.email = email;
 	this.firstName = firstName;
 	this.lastName = lastName;
+	
 	this.isFriend = false;
 	if(isFriend !== undefined){
 		this.isFriend = isFriend;
@@ -36,14 +37,14 @@ User.prototype.changeFriendship = function()
 };
 
 User.prototype.getHTML = function(){
-	var html = "<h2><a href=\"?user_id="+this.id+"\">" + this.firstName + " " + this.lastName + "<small></a> :: " + this.email + "</small>";
-	
-	if(isFriend == true)
-		html += "<input type=\"submit\" value=\"-\" onclick=\"FriendRemove("+ this.id +")/>";
-	else
-		html += "<input type=\"submit\" value=\"+\" onclick=\"FriendAdd("+ this.id +")/>";
-	html += "</h2>";
-	
+	var html = "";
+	html += "<a href=\"?user_id="+this.id+"\">" + this.firstName + " " + this.lastName + "</a>";
+	if(state.myProfil != undefined && state.myProfil.id != this.id){
+		if(isFriend(this.id))
+			html += "<input type=\"submit\" value=\"-\" onclick=\"FriendRemove.ajax("+ this.id +")\"/>";
+		else
+			html += "<input type=\"submit\" value=\"+\" onclick=\"FriendAdd.ajax("+ this.id +")\"/>";
+	}
 	return html;
 };
 
@@ -61,10 +62,11 @@ function Pwitt(id, user, content, date, score)
 
 Pwitt.prototype.getHTML = function()
 {
-	var html = "<div id=\"Pwitt_" + this.id + "\">\n"
-		+ "<h2>" + this.user.firstName + " " + this.user.lastName + "<small> :: " + this.user.email + " :: " + formatDate(this.date) + "</small></h2>\n"
-		+ "<p>" + this.content + "</p>\n"
-		+ "</div>";
+	var html ="";
+	html += "<div class=\"maincol\" id=\"pwitt_"+this.id+"\">";
+	html += this.user.getHTML() + " ["+formatDate(this.date)+"] : \"" + this.content;
+	html += "</div>";
+	//html += "<div class=\"maincol_bottom\"></div>";
 	return html;
 };
 
@@ -96,11 +98,10 @@ function PwittsFind(pwitts, user_id, date, words, doFriends)
 
 PwittsFind.prototype.getHTML = function()
 {
-	var s = "<div class=\"maincol\">\n";
+	var s ="";
 	for(var i=this.pwitts.length-1; i>=0; i--){
 		s += this.pwitts[i].getHTML()+"\n";
 	}
-	s += "</div>\n<div class=\"maincol_bottom\"></div";
 	return s;
 };
 
@@ -115,7 +116,7 @@ PwittsFind.reviver = function(key,value)
 		var tab = [value.length];
 		for(var i=0;i<value.length;i++){
 			tab[i] = new Pwitt(
-				value[i].id,
+				value[i]._id.$oid,
 				value[i].user,
 				value[i].content,
 				value[i].date,
@@ -133,12 +134,28 @@ PwittsFind.reviver = function(key,value)
 	return value;
 };
 
-PwittsFind.ajax = function()
+PwittsFind.ajaxAllPwitts = function()
 {
 	$.ajax({
 		type:"GET",
 		url:"http://li328.lip6.fr:8280/CADENE_PANOU/pwitts/find",
-		//data:"session="+state.session+"&content="+content,
+		//data:"session="+state.myProfil.session,
+		datatype:"json",
+		success: function(response){
+			PwittsFind.onSuccess(response);
+		},
+		error: function(error){
+			throwError(error);
+		}
+	});
+};
+
+PwittsFind.ajaxMyPwitts = function()
+{
+	$.ajax({
+		type:"GET",
+		url:"http://li328.lip6.fr:8280/CADENE_PANOU/pwitts/find",
+		data:"session="+state.myProfil.session,
 		datatype:"json",
 		success: function(response){
 			PwittsFind.onSuccess(response);
@@ -156,10 +173,10 @@ PwittsFind.onSuccess = function(response)
 		return throwError(obj.error);
 	}
 	state.pwittsFind = obj;
-	
+
 	$("#page_name").html("Liste des pwitts");
 	$("#form-PwittSend").show();
-	$("#maincol_content").html(obj.getHTML());
+	$("#maincol_content").html("<div id=\"pwitts\">"+ obj.getHTML() +"</div>");
 };
 
 /**********************/
@@ -197,7 +214,7 @@ PwittSend.onSuccess = function(response,content)
 		
 	var html = pwitt.getHTML();
 	
-	$("#maincol").prepend(html);
+	$("#pwitts").prepend(html);
 };
 
 /**********************/
@@ -210,9 +227,11 @@ FriendAdd.ajax = function(friend_id)
 	$.ajax({
 		type:"GET",
 		url:"http://li328.lip6.fr:8280/CADENE_PANOU/friend/add",
-		data:"session="+state.session+"&friend_id="+friend_id,
+		data:"session="+state.myProfil.session+"&friend_id="+friend_id,
 		datatype:"json",
-		success: FriendAdd.onSuccess(response,friend_id),
+		success: function(response){
+			FriendAdd.onSuccess(response,friend_id);
+		},
 		error: function(error){
 			throwError(error);
 		}
@@ -221,19 +240,25 @@ FriendAdd.ajax = function(friend_id)
 
 FriendAdd.onSuccess = function(response,friend_id)
 {
-	if(response.error !== undefined){
-		return throwError(error);
+	var obj = JSON.parse(response);
+	if(obj.error !== undefined){
+		return throwError(obj.error);
 	}
 		
-	var user = state.users[id];
-	user.modifyFriendship();
+	var user = state.users[friend_id];
+	user.changeFriendship();
 	var pwitts = state.pwittsFind.pwitts;
 	for(var i in pwitts){
 		// TODO
 		if(pwitts[i].user.id == friend_id){
-			$("#pwitt_"+pwitts[i].id).replacewith(pwitts[i].getHTML());
+			$("#pwitt_"+pwitts[i].id).replaceWith(pwitts[i].getHTML());
 		}
 	}
+	
+	if(isFriend(friend_id))
+		state.myProfil.friends[friend_id] = false;
+	else
+		state.myProfil.friends[friend_id] = true;
 	
 };
 
@@ -249,31 +274,18 @@ FriendRemove.ajax = function(friend_id)
 	$.ajax({
 		type:"GET",
 		url:"http://li328.lip6.fr:8280/CADENE_PANOU/friend/remove",
-		data:"session="+state.session+"&friend_id="+friend_id,
+		data:"session="+state.myProfil.session+"&friend_id="+friend_id,
 		datatype:"json",
-		success: FriendRemove.onSuccess(response,friend_id),
+		success: function(response){
+			FriendAdd.onSuccess(response,friend_id);
+		},
 		error: function(error){
 			throwError(error);
 		}
 	});
 };
 
-// TODO
-FriendRemove.onSuccess = function()
-{
-	if(response.error !== undefined){
-		return throwError(error);
-	}
-	var user = state.users[id];
-	user.modifyFriendship();
-	var pwitts = state.pwittsFind.pwitts;
-	for(var i in pwitts){
-		// TODO
-		if(pwitts[i].user.id == friend_id){
-			$("#pwitt_"+pwitts[i].id).replacewith(pwitts[i].getHTML());
-		}
-	}
-};
+
 
 /***********************/
 /** Object UserLogout **/
@@ -333,6 +345,8 @@ MyProfil.onSuccess = function(response,session)
 	state.myProfil = new MyProfil(user.id, session);
 	state.currentUser_id = user.id;
 	state.users[user.id] = user;
+
+	FriendsFind.ajaxGetFriends();
 	
 	var html = "<div id=\"login-register\">" +
 			"<h2>Current Profil</h2>" +
@@ -342,7 +356,7 @@ MyProfil.onSuccess = function(response,session)
 	
 	$("#login-register").replaceWith(html);
 	
-	PwittsFind.ajax();
+	PwittsFind.ajaxAllPwitts();
 };
 
 MyProfil.reviver = function(key,value)
@@ -441,6 +455,24 @@ FriendsFind.ajax = function ()
 	});
 };
 
+FriendsFind.ajaxGetFriends = function ()
+{
+	$.ajax({
+		type:"GET",
+		url:"http://li328.lip6.fr:8280/CADENE_PANOU/friends/find",
+		data:"session="+state.myProfil.session,
+		async: false,
+		datatype:"json",
+		success: function(response){
+			FriendsFind.onSuccessGetFriends(response);
+		},
+		error: function(error){
+			throwError(error);
+		}
+	});
+};
+
+
 FriendsFind.onSuccess = function(response)
 {
 	var obj = JSON.parse(response,FriendsFind.reviver);
@@ -450,7 +482,31 @@ FriendsFind.onSuccess = function(response)
 	
 	var friends = obj.friends;
 	
+	var tab = [friends.length];
+	for(i in friends.users){
+		tab[friends.users[i].id] = true;
+	}
+	
+	state.myProfil.friends = tab;
+	
 	$("#pwitts").replaceWith(friends.getHTML());
+};
+
+FriendsFind.onSuccessGetFriends = function(response)
+{
+	var obj = JSON.parse(response,FriendsFind.reviver);
+	if(response.error !== undefined){
+		return throwError(error);
+	}
+	
+	var friends = obj.friends;
+	
+	var tab = [friends.length];
+	for(i in friends.users){
+		tab[friends.users[i].id] = true;
+	}
+	
+	state.myProfil.friends = tab;
 };
 
 FriendsFind.reviver = function(key,value)
@@ -520,4 +576,14 @@ function dateDiff(date1, date2){
     return diff;
 }
 
+
+function isFriend(user_id){
+	if(state.myProfil != undefined
+		&& state.myProfil.friends[user_id] != undefined
+		&& state.myProfil.friends[user_id] != false
+	){
+		return true;
+	}
+	return false;
+}
 
