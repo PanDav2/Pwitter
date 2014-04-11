@@ -13,7 +13,7 @@ public class FriendsFind extends HttpServlet{
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
+	/*private static final long serialVersionUID = 1L;
 
 	@Override
 	protected void doGet (HttpServletRequest req, HttpServletResponse resp) throws IOException{
@@ -26,7 +26,7 @@ public class FriendsFind extends HttpServlet{
 			
 			
 			try {
-				resp.getWriter().println(services.Friends.find(session).toString());
+				/*resp.getWriter().println(services.Friends.find(session).toString());
 			} catch (JSONException e) {
 				resp.getWriter().println(ServletTools.JSONError());
 			}
@@ -37,5 +37,5 @@ public class FriendsFind extends HttpServlet{
 	
 	}
 	
-
+*/
 }
