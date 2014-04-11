@@ -46,6 +46,15 @@
         <servlet-name>UserRegister</servlet-name>
         <url-pattern>/user/register</url-pattern>
     </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>UsersFind</servlet-name>
+        <servlet-class>servlet.UsersFind</servlet-class>
+	</servlet>
+	<servlet-mapping>
+        <servlet-name>UsersFind</servlet-name>
+        <url-pattern>/users/find</url-pattern>
+    </servlet-mapping>
 
     <servlet>
         <servlet-name>PwittSend</servlet-name>

@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONException;
 
-public class FriendsFind extends HttpServlet{
+public class UsersFind extends HttpServlet{
 	
 	/**
 	 * 
@@ -24,9 +24,17 @@ public class FriendsFind extends HttpServlet{
 			
 			String session =  req.getParameter("session");
 			
+			String words = "";
+			
+			if(req.getParameterMap().containsKey("words")) {
+				words = req.getParameter("words");
+			}
+			
+			//String[] ArrayWords = words.split(" ");
+			//resp.getWriter().println(ArrayWords.length + " : " + ArrayWords[0] );
 			
 			try {
-				resp.getWriter().println(services.Friends.find(session).toString());
+				resp.getWriter().println(services.Users.find(session,words).toString());
 			} catch (JSONException e) {
 				resp.getWriter().println(ServletTools.JSONError());
 			}

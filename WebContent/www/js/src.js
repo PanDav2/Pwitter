@@ -244,21 +244,24 @@ FriendAdd.onSuccess = function(response,friend_id)
 	if(obj.error !== undefined){
 		return throwError(obj.error);
 	}
-		
+	
+	if(isFriend(friend_id))
+		state.myProfil.friends[friend_id] = false;
+	else
+		state.myProfil.friends[friend_id] = true;
+	
+	
 	var user = state.users[friend_id];
 	user.changeFriendship();
 	var pwitts = state.pwittsFind.pwitts;
 	for(var i in pwitts){
 		// TODO
 		if(pwitts[i].user.id == friend_id){
+			console.log(pwitts[i].getHTML());
 			$("#pwitt_"+pwitts[i].id).replaceWith(pwitts[i].getHTML());
 		}
 	}
 	
-	if(isFriend(friend_id))
-		state.myProfil.friends[friend_id] = false;
-	else
-		state.myProfil.friends[friend_id] = true;
 	
 };
 
